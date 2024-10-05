@@ -9,6 +9,7 @@ import { ContactComponent } from './pages/contact/contact.component';
 import { DashboardOfficialsComponent } from './pages/dashboard-officials/dashboard-officials.component';
 import { NoticesComponent } from './pages/notices/notices.component';
 import { HomeComponent } from './pages/home/home.component';
+import { LoginSignupComponent } from './pages/login-signup/login-signup.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' }, // Default route
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'dashboard-officials', component: DashboardOfficialsComponent },
   { path: 'notices', component: NoticesComponent },
   { path: 'home', component: HomeComponent },
+  { path: 'login', component: LoginSignupComponent },
   // Add additional routes here as needed
 ];
 
