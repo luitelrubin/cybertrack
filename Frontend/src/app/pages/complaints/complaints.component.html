@@ -1,0 +1,16 @@
+<div class="container">
+    <p>Name</p>
+    <input type="text" [(ngModel)]="newComplaint.name" />
+  
+    <p>Address</p>
+    <input type="text" [(ngModel)]="newComplaint.address" />
+  
+    <p>Phone</p>
+    <input type="text" [(ngModel)]="newComplaint.phone" />
+  
+    <p>Complaint</p>
+    <textarea [(ngModel)]="newComplaint.complaint" class="complaint-box"></textarea>
+  
+    <button (click)="addComplaint()">Add Complaint</button>
+  </div>
+  

@@ -1,0 +1,31 @@
+/* Header Styles */
+.header {
+  background-color: #282c34; /* Dark background for a modern look */
+  padding: 15px 30px; /* Padding around the header */
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-between; /* Space items evenly */
+  align-items: center; /* Center items vertically */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Button Styles */
+.header button {
+  background: none; /* No background */
+  border: none; /* Remove border */
+  color: #ffffff; /* Text color */
+  font-size: 16px; /* Font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  margin: 0 15px; /* Margin for spacing */
+  transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+}
+
+/* Hover Effect */
+.header button:hover {
+  color: #61dafb; /* Change text color on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Optional: Active Button Style */
+.header button:focus {
+  outline: none; /* Remove default outline */
+}

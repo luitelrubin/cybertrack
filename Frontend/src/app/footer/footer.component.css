@@ -1,0 +1,32 @@
+/* Footer Styles */
+.footer {
+    background-color: #282c34; /* Dark background for consistency with header */
+    padding: 15px 30px; /* Padding around the footer */
+    display: flex; /* Use flexbox for layout */
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  /* Button Styles */
+  .footer button {
+    background: none; /* No background */
+    border: none; /* Remove border */
+    color: #ffffff; /* Text color */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin: 0 15px; /* Margin for spacing */
+    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+  }
+  
+  /* Hover Effect */
+  .footer button:hover {
+    color: #61dafb; /* Change text color on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+  }
+  
+  /* Optional: Active Button Style */
+  .footer button:focus {
+    outline: none; /* Remove default outline */
+  }
+  
