@@ -13,6 +13,7 @@ export class ComplaintsComponent {
   complaints: Complaint[] = [];
 
   addComplaint() {
+  
     this.newComplaint.status = 'Pending';
     this.complaints.push({ ...this.newComplaint });
     this.newComplaint = new Complaint();
