@@ -6,17 +6,21 @@
   justify-content: space-between; /* Space items evenly */
   align-items: center; /* Center items vertically */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  position: relative; /* Allow absolute positioning for some elements */
+  z-index: 1000; /* Ensure header is on top */
 }
 
 /* Button Styles */
 .header button {
   background: none; /* No background */
   border: none; /* Remove border */
-  color: #ffffff; /* Text color */
+  color: #ffffff; /* White text color */
   font-size: 16px; /* Font size */
   cursor: pointer; /* Pointer cursor on hover */
-  margin: 0 15px; /* Margin for spacing */
+  margin: 0 15px; /* Space between buttons */
+  padding: 10px 20px; /* Increase clickable area */
   transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+  font-family: 'Arial', sans-serif; /* Clean, modern font */
 }
 
 /* Hover Effect */
@@ -28,4 +32,17 @@
 /* Optional: Active Button Style */
 .header button:focus {
   outline: none; /* Remove default outline */
+}
+
+
+/* Responsive Design: Stack buttons on smaller screens */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: flex-start; /* Align items to the left */
+  }
+
+  .header button {
+    margin: 10px 0; /* Add margin between buttons */
+  }
 }

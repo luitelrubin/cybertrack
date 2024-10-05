@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
+import { ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsModule
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AboutUsComponent } from './pages/about-us/about-us.component';
@@ -12,6 +13,7 @@ import { NoticesComponent } from './pages/notices/notices.component';
 import { HomeComponent } from './pages/home/home.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
+import { LoginSignupComponent } from './pages/login-signup/login-signup.component';
 
 @NgModule({
   declarations: [
@@ -24,12 +26,14 @@ import { FooterComponent } from './footer/footer.component';
     NoticesComponent,
     HomeComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    LoginSignupComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule, // Add ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
