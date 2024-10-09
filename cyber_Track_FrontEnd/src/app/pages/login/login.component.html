@@ -1,1 +1,48 @@
-<p>login works!</p>
+<div class="form-container">
+    <div class="button-group">
+      <button mat-raised-button color="primary" (click)="isLogin = true">Login</button>
+      <button mat-raised-button color="accent" (click)="isLogin = false">Sign Up</button>
+    </div>
+  
+    <h1 id="signSuccessfull" *ngIf="Signedup">Signed up Successfully!!</h1>
+  
+    <!-- Login Form -->
+    <form class="form-content" *ngIf="isLogin" [formGroup]="HandleLogin" (submit)="LoginSubmit()">
+      <h1>Login</h1>
+  
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="text" formControlName="email" placeholder="Email" required minlength="5">
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="Password" required minlength="8">
+      </mat-form-field>
+  
+      <button mat-raised-button type="submit" color="primary" class="submit-button">Login</button>
+    </form>
+  
+    <!-- Sign Up Form -->
+    <form class="form-content" *ngIf="!isLogin" [formGroup]="HandleSignup" (submit)="SignupSubmit()">
+      <h1>Sign Up</h1>
+  
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="text" formControlName="email" placeholder="Email" required minlength="5">
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="Password" required minlength="8">
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Re-enter Password</mat-label>
+        <input matInput type="password" formControlName="passwordRewrite" placeholder="Re-enter Password" required minlength="8">
+      </mat-form-field>
+  
+      <button mat-raised-button type="submit" color="primary" class="submit-button">Sign Up</button>
+    </form>
+  </div>
+  
