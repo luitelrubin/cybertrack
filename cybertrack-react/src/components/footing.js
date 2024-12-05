@@ -1,8 +1,7 @@
-import './footing.css';
 export default function footing() {
     return (
       <footer class="bg-[#0a4275] font-sans tracking-wide">
-      <div class="py-14 px-6 sm:px-10">
+      <div class="py-10 px-6 sm:px-10">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
 
           <div class="lg:col-span-2">
@@ -15,8 +14,8 @@ export default function footing() {
           <div>
             <h4 class="text-lg font-semibold mb-8 text-white">Navigation</h4>
             <ul class="space-y-4">
-              <li><a href="javascript:void(0)" class="text-gray-300 hover:text-white text-sm">Home</a></li>
-              <li><a href="javascript:void(0)" class="text-gray-300 hover:text-white text-sm">About</a></li>
+              <li><a href="/home" class="text-gray-300 hover:text-white text-sm">Home</a></li>
+              <li><a href="/complaint" class="text-gray-300 hover:text-white text-sm">About</a></li>
               <li><a href="javascript:void(0)" class="text-gray-300 hover:text-white text-sm">Services</a></li>
               <li><a href="javascript:void(0)" class="text-gray-300 hover:text-white text-sm">Contact</a></li>
             </ul>
@@ -66,10 +65,6 @@ export default function footing() {
           </div>
 
         </div>
-      </div>
-
-      <div class="text-center py-5 bg-[#08355e]">
-        <p class='text-gray-300 text-sm'>© ReadymadeUI. All rights reserved.</p>
       </div>
     </footer>
     );
