@@ -29,7 +29,7 @@ class SignupView(generics.CreateAPIView):
         user = serializer.save()
         user.isactive = False
         user.save()
-        user.send_verification_email()
+        # user.send_verification_email()
         
 
 class LoginView(generics.GenericAPIView):
@@ -105,16 +105,16 @@ class PasswordResetConfirmView(APIView):
         return Response({'error': 'Invalid token or user'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class VerifyEmailView(APIView):
-    def get(self, request, uidb64, token):
-        try:
-            uid = urlsafe_base64_decode(uidb64).decode()
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
+# class VerifyEmailView(APIView):
+#     def get(self, request, uidb64, token):
+#         try:
+#             uid = urlsafe_base64_decode(uidb64).decode()
+#             user = User.objects.get(pk=uid)
+#         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+#             user = None
 
-        if user is not None and default_token_generator.check_token(user, token):
-            user.is_active = True
-            user.save()
-            return Response({'success': 'Email has been verified'}, status=status.HTTP_200_OK)
-        return Response({'error': 'Invalid token or user'}, status=status.HTTP_400_BAD_REQUEST)
+#         if user is not None and default_token_generator.check_token(user, token):
+#             user.is_active = True
+#             user.save()
+#             return Response({'success': 'Email has been verified'}, status=status.HTTP_200_OK)
+#         return Response({'error': 'Invalid token or user'}, status=status.HTTP_400_BAD_REQUEST)

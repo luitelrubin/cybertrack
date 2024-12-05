@@ -357,4 +357,3 @@ class OtherComplaint(Complaint):
     ])
     frauder_name = models.CharField(max_length=100)
     suspect_persons = models.TextField()
-
