@@ -1,5 +1,5 @@
 from django.db import models
-import time, random, string
+import time, random
 from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
@@ -251,7 +251,7 @@ class Complaint(models.Model):
 
     unique_id_number = models.CharField(max_length=100, blank=False, null=False)
     contact_no = PhoneNumberField()
-    contact_email = models.EmailField()
+    contact_email = models.EmailField(blank=False, null=False)
     guardian_no = PhoneNumberField(blank=True, null=True)
     description = models.TextField(blank=False, null=False)
     medium = models.CharField(max_length=100, choices=[
