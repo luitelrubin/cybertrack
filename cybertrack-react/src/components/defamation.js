@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import jsPDF from 'jspdf';
 
+
 export default function Defamation() {
   const [formData, setFormData] = useState({
     victim_Name: '',
@@ -67,157 +68,160 @@ export default function Defamation() {
               <h4>Defamation Complaint Form</h4>
             </div>
             <div className="card-body">
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label>Victim Name</label>
+              <form className="font-sans m-6 max-w-4xl mx-auto" onSubmit={handleSubmit}>
+              <div className="grid sm:grid-cols-2 gap-10">
+              <div className="relative flex items-center">
+              <label>Victim Name</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     name="victim_Name"
                     value={formData.victim_Name}
                     onChange={handleChange}
+                    
                     required
                   />
                 </div>
-                <div className="form-group">
-                  <label>Date of Birth</label>
+                <div className="relative flex items-center">
+                <label>Date of Birth</label>
                   <input
                     type="date"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     name="date_of_birth"
                     value={formData.date_of_birth}
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Address</label>
+                <div className="relative flex items-center">
+                <label>Address</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Name/ID of the Suspect</label>
+                <div className="relative flex items-center">
+                <label>Name/ID of the Suspect</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     name="unique_id"
                     value={formData.unique_id}
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Close relative of the Suspect</label>
+                <div className="relative flex items-center">
+                <label>Close relative of the Suspect</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     name="close_relative"
                     value={formData.close_relative}
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Contact No</label>
+                <div className="relative flex items-center">
+                <label>Contact No</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     name="contact_no"
                     value={formData.contact_no}
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Contact Email</label>
+                <div className="relative flex items-center">
+                <label>Contact Email</label>
                   <input
                     type="email"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     name="contact_email"
                     value={formData.contact_email}
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Guardian No</label>
+                <div className="relative flex items-center">
+                <label>Guardian No</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     name="guardian_no"
                     value={formData.guardian_no}
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Description</label>
+                <div className="relative flex items-center">
+                <label>Description</label>
                   <textarea
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     name="description"
                     value={formData.description}
                     onChange={handleChange}
                   ></textarea>
                 </div>
-                <div className="form-group">
-                  <label>Medium</label>
+                <div className="relative flex items-center">
+                <label>Medium</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     name="medium"
                     value={formData.medium}
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Evidence Links</label>
+                <div className="relative flex items-center">
+                <label>Evidence Links</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     name="evidence_links"
                     value={formData.evidence_links}
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Unique ID Card</label>
+                <div className="relative flex items-center">
+                <label>Unique ID Card</label>
                   <input
                     type="file"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     onChange={(e) => handleFileChange(e, 'unique_id_card')}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Signature</label>
+                <div className="relative flex items-center">
+                <label>Signature</label>
                   <input
                     type="file"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     onChange={(e) => handleFileChange(e, 'signature')}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Screenshots</label>
+                <div className="relative flex items-center">
+                <label>Screenshots</label>
                   <input
                     type="file"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     onChange={(e) => handleFileChange(e, 'screenshots')}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Other Documents</label>
+                <div className="relative flex items-center">
+                <label>Other Documents</label>
                   <input
                     type="file"
-                    className="form-control"
+                    className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                     onChange={(e) => handleFileChange(e, 'other_doc')}
                   />
                 </div>
-                <button type="submit" className="btn btn-primary mt-3">
+                <button type="submit" className="mt-8 px-6 py-2.5 w-full text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-all">
                   Submit
                 </button>
+              </div>
               </form>
               {showDownloadButton && (
                 <button
                   onClick={handleDownload}
-                  className="btn btn-secondary mt-3"
+                  className="mt-8 px-6 py-2.5 w-full text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-all"
                 >
                   Download PDF
                 </button>

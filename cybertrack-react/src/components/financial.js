@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import jsPDF from 'jspdf';
+
 
 export default function Financial() {
   const [formData, setFormData] = useState({
@@ -12,11 +14,14 @@ export default function Financial() {
     description: '',
     medium: '',
     evidence_links: '',
+    close_relative: '',
     unique_id_card: null,
     signature: null,
     screenshots: null,
     other_doc: null,
   });
+
+  const [showDownloadButton, setShowDownloadButton] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,8 +40,23 @@ export default function Financial() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log(formData);
+    setShowDownloadButton(true);
+  };
+  
+  const handleDownload = () => {
+    const doc = new jsPDF();
+    const date = new Date().toLocaleDateString();
+  
+    doc.setFontSize(12);
+    doc.text(date, 150, 10); // Date at the top right
+  
+    doc.text(10, 20, "Respected Investigator,");
+    doc.text(10, 30, "Subject: Request to take action regarding the cyber crime incident.");
+  
+    const introText = `In the above regard, I have submitted a written request to the petitioner/applicant to take action as per the law as the following cyber crime incident has occurred.\n\nThe following is the information about the incident:\n\n1.Original ID/URL: ${formData.evidence_links}\n2.Medium of Crime: ${formData.medium}\n3.Suspected Culprit: ${formData.unique_id}\n4.Summary of the crime: ${formData.description}\n5.Close Relative of the Suspect: ${formData.close_relative}\n\nI know that the above statement is true and correct. If it is found to be false, I will be held accountable according to the law.\n\nDetails of the applicant:\nName: ${formData.victim_Name}\nDate of Birth: ${formData.date_of_birth}\nAddress: ${formData.address}\nContact No: ${formData.contact_no}\nContact Email: ${formData.contact_email}\nGuardian No: ${formData.guardian_no}`;
+    const introLines = doc.splitTextToSize(introText, 180);
+    doc.text(10, 40, introLines);
+    doc.save('complaint.pdf');
   };
 
   return (
@@ -81,12 +101,22 @@ export default function Financial() {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Unique ID</label>
+                  <label>Name/ID of the Suspect</label>
                   <input
                     type="text"
                     className="form-control"
                     name="unique_id"
                     value={formData.unique_id}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Close relative of the Suspect</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="close_relative"
+                    value={formData.close_relative}
                     onChange={handleChange}
                   />
                 </div>
@@ -185,6 +215,14 @@ export default function Financial() {
                   Submit
                 </button>
               </form>
+              {showDownloadButton && (
+                <button
+                  onClick={handleDownload}
+                  className="btn btn-secondary mt-3"
+                >
+                  Download PDF
+                </button>
+              )}
             </div>
           </div>
         </div>
