@@ -9,6 +9,7 @@ import Home from './components/home';
 import Login from './components/login';
 import Notice from './components/notice';
 import Signup from './components/signup';
+import Dashboard from './components/dashboard';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -22,6 +23,7 @@ root.render(
           <Route path="login" element={<Login />} />
           <Route path="notice" element={<Notice />} />
           <Route path="signup" element={<Signup />} />
+          <Route path="dashboard" element={<Dashboard />} />
         </Route>
       </Routes>
     </BrowserRouter>

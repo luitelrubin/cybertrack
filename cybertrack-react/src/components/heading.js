@@ -35,7 +35,7 @@ export default function Heading() {
               <Link to='/signup' className='hover:text-[#007bff] text-[#333] font-semibold block text-[15px]'>Signup</Link>
             </li>
             <li className='max-lg:border-b max-lg:py-3 px-3'>
-              <Link to='/contact' className='hover:text-[#007bff] text-[#333] font-semibold block text-[15px]'>Contact</Link>
+              <Link to='/dashboard' className='hover:text-[#007bff] text-[#333] font-semibold block text-[15px]'>Dashboard</Link>
             </li>
           </ul>
         </div>
