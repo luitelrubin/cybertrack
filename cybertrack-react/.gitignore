@@ -24,9 +24,11 @@ yarn-debug.log*
 yarn-error.log*
 
 #backend files
-/Cyber_Track/Cyber_Track/__pycache__
+/Cyber_Track/__pycache__
 /Cyber_Track/complaints/__pycache__
 /Cyber_Track/complaints/migrations
+/Cyber_Track/notices/__pycache__
+/Cyber_Track/notices/migrations
 /Cyber_Track/account/__pycache__
 /Cyber_Track/account/migrations
 /.cyber
