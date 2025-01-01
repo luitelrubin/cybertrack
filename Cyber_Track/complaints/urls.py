@@ -1,10 +1,12 @@
 from django.urls import path
 from .views import (FinancialComplaintCreateView, SocialMediaHackComplaintCreateView, DefamationComplaintCreateView, OtherComplaintCreateView,
-                    ListAllComplaintsView, AllComplaintUpdateView,ComplaintTrackingView, SendEmailView,
+                    ListAllComplaintsView, AllComplaintUpdateView,ComplaintTrackingView, SendEmailView,UploadDocumentView,
                     )
 urlpatterns = [
     #Complaint Listing URL
     path('', ListAllComplaintsView.as_view(), name='list-all-complaints'),
+    #Upload File
+    path('upload-document/', UploadDocumentView.as_view(), name='upload-document'),
     #Complaint creation URLs
     path('create-financial-fraud/', FinancialComplaintCreateView.as_view(), name='financial-complaint-create'),
     path('create-social-media-hack/', SocialMediaHackComplaintCreateView.as_view(), name='social-media-hack-complaint-create'),

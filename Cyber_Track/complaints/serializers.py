@@ -1,6 +1,11 @@
 from rest_framework import serializers
-from .models import Complaint, SocialMediaHackComplaint, DefamationComplaint, OtherComplaint, FinancialFraudComplaint
+from .models import Complaint, SocialMediaHackComplaint, DefamationComplaint, OtherComplaint, FinancialFraudComplaint, Document
 
+
+class DocumentSerializer(serializers.Serializer):
+    class Meta:
+        model = Document
+        fields = ['file','file_type','uploaded_at']
 
 class ComplaintSerializer(serializers.ModelSerializer):
     class Meta:

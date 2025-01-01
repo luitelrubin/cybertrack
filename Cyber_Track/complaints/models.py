@@ -148,7 +148,7 @@ class Complaint(models.Model):
     ward_no = models.PositiveIntegerField()
 
     unique_id_number = models.CharField(max_length=100, blank=False, null=False)
-    contact_no = PhoneNumberField()
+    contact_no = models.CharField(max_length=15, blank=False, null=False)
     contact_email = models.EmailField()
     guardian_no = PhoneNumberField(blank=True, null=True)
     description = models.TextField(blank=False, null=False)
@@ -165,10 +165,10 @@ class Complaint(models.Model):
 
     ])
     evidence_links = models.URLField(null=True, blank=True)
-    unique_id_card = models.FileField(upload_to='documents/' , blank=True, null=True)
-    signature = models.FileField(upload_to='documents/', blank=True, null=True)
-    screenshots = models.FileField(upload_to='documents/', blank=True, null=True)
-    other_doc = models.FileField(upload_to='documents/', blank=True, null=True)
+    unique_id_card = models.FileField(upload_to='pdfs/documents/' , blank=True, null=True)
+    signature = models.FileField(upload_to='pdfs/documents/', blank=True, null=True)
+    screenshots = models.FileField(upload_to='pdfs/documents/', blank=True, null=True)
+    other_doc = models.FileField(upload_to='pdfs/documents/', blank=True, null=True)
     status = models.CharField(choices=STATUS_CHOICES, default=1, blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -256,3 +256,18 @@ class OtherComplaint(Complaint):
     frauder_name = models.CharField(max_length=100)
     suspect_persons = models.TextField()
 
+
+class Document(models.Model):
+    file = models.FileField(upload_to='pdfs/documents/')
+    file_type = models.CharField(max_length=50, choices=[
+        ('pdf', 'PDF'),
+        ('png', 'PNG'),
+        ('jpg', 'JPEG'),
+        ('docx', 'DOCX'),
+        ('xlsx', 'XLSX'),
+        ('txt', 'TXT'),
+        ('csv', 'CSV'),
+        ('zip', 'ZIP'),
+        ('other', 'Other'),
+    ])
+    uploaded_at = models.DateTimeField(auto_now_add=True)

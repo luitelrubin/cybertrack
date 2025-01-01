@@ -5,13 +5,28 @@ from rest_framework.response import Response
 from itertools import chain
 from django.core.mail import send_mail
 from django.conf import settings
+from rest_framework.parsers import MultiPartParser,FormParser
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from .permissions import IsOfficerOrAdmin
-from .models import FinancialFraudComplaint, SocialMediaHackComplaint, DefamationComplaint, OtherComplaint
-from .serializers import (FinancialFraudComplaintSerializer, SocialMediaHackComplaintSerializer, DefamationComplaintSerializer, OtherComplaintSerializer,
+from .models import FinancialFraudComplaint, SocialMediaHackComplaint, DefamationComplaint, OtherComplaint,Document
+from .serializers import (FinancialFraudComplaintSerializer, SocialMediaHackComplaintSerializer, DefamationComplaintSerializer, OtherComplaintSerializer,DocumentSerializer
                             )
 
 # Create your views here.
+
+class UploadDocumentView(generics.CreateAPIView):
+    parser_classes = [MultiPartParser, FormParser]
+    queryset = Document.objects.all()
+    serializer_class = DocumentSerializer
+
+    def post(self, request, *args, **kwargs):
+        document_serializer = DocumentSerializer(data=request.data)
+        if document_serializer.is_valid():
+            document_serializer.save()
+            return Response(status=201)
+        else:
+            return Response(document_serializer.errors, status=400)
+
 
 # Complaint Create Views
 class FinancialComplaintCreateView(generics.CreateAPIView): # To Create Financial Fraud Complaint
