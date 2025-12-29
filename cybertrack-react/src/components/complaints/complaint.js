@@ -47,22 +47,22 @@ export default function Complaint() {
     setShowDownloadButton(true);
   
     // Uncomment the API call part when ready to test
-    // try {
-    //   // Send POST request to the backend API
-    //   const response = await axios.post("http://localhost:8000/complaints/create-defamation/", combinedData, {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
+    try {
+      // Send POST request to the backend API
+      const response = await axios.post("http://localhost:8000/complaints/create-defamation/", combinedData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
   
-    //   if (response.status === 201) {
-    //     // Handle successful response
-    //     console.log("Complaint submitted successfully");
-    //     setShowDownloadButton(true);
-    //   }
-    // } catch (error) {
-    //   console.error("Error submitting complaint:", error);
-    // }
+      if (response.status === 201) {
+        // Handle successful response
+        console.log("Complaint submitted successfully");
+        setShowDownloadButton(true);
+      }
+    } catch (error) {
+      console.error("Error submitting complaint:", error);
+    }
   
     console.log('Received data from Defamation:', defamationData);
   };

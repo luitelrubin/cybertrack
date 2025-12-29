@@ -133,8 +133,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'cyber_track',
-        'USER': 'ankitk',
-        'PASSWORD': '1236',
+        'USER': 'postgres',
+        'PASSWORD': 'S3cret-Ninja',
         'HOST': 'localhost',
         'PORT': '5432',
     }
