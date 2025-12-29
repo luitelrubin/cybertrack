@@ -1,0 +1,60 @@
+# Django
+*.pyc
+*.pyo
+__pycache__/
+*.egg-info/
+dist/
+build/
+*.log
+db.sqlite3
+db.sqlite3-journal
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+*.pot
+/media
+/staticfiles
+
+# React / Create React App
+cybertrack-react/node_modules/
+cybertrack-react/.env.local
+cybertrack-react/.env.development.local
+cybertrack-react/.env.test.local
+cybertrack-react/.env.production.local
+cybertrack-react/npm-debug.log*
+cybertrack-react/yarn-debug.log*
+cybertrack-react/yarn-error.log*
+cybertrack-react/build/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.hypothesis/
+
+# Misc
+*.bak
+*.orig
+.cache/
