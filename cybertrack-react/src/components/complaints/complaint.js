@@ -1,35 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Defamation from "./defamation";
 import Financial from "./financial";
 import Social from "./social";
 import Others from "./others";
-import jsPDF from 'jspdf';
+import jsPDF from "jspdf";
 import axios from "axios";
 
 export default function Complaint() {
   const [page, setPage] = useState(1);
   const [formData, setFormData] = useState({
-    complaint_id: '',
-    victim_Name: '',
-    province: '',
-    district: '',
-    country: '',
-    ward_no: '',
-    city: '',
-    date_of_birth: '',
-    unique_id_number: '',
-    contact_no: '',
-    contact_email: '',
-    guardian_no: '',
-    description: '',
-    medium: '',
-    evidence_links: '',
+    complaint_id: "",
+    victim_Name: "",
+    province: "",
+    district: "",
+    country: "",
+    ward_no: "",
+    city: "",
+    date_of_birth: "",
+    unique_id_number: "",
+    contact_no: "",
+    contact_email: "",
+    guardian_no: "",
+    description: "",
+    medium: "FB",
+    evidence_links: "",
     unique_id_card: null,
     signature: null,
     screenshots: null,
     other_doc: null,
   });
-  const [complaintType, setComplaintType] = useState('');
+  const [complaintType, setComplaintType] = useState("");
   const [defamationData, setDefamationData] = useState(null);
   const [financialData, setFinancialData] = useState(null);
   const [socialData, setSocialData] = useState(null);
@@ -41,30 +41,61 @@ export default function Complaint() {
       ...formData,
       ...defamationData,
     };
-  
-    console.log("Combined Data:", combinedData); // Log the combined data being sent
-  
+
+    console.log("Combined Data:", combinedData);
+
     setShowDownloadButton(true);
-  
-    // Uncomment the API call part when ready to test
+
     try {
+      // Create FormData to handle file uploads
+      const formDataToSend = new FormData();
+
+      // Required fields that should always be included
+      const requiredFields = [
+        "description",
+        "medium",
+        "contact_no",
+        "contact_email",
+      ];
+
+      // Add all fields to FormData
+      for (const key in combinedData) {
+        const value = combinedData[key];
+
+        // Include if: not null/undefined, OR it's a required field
+        if (
+          (value !== null && value !== undefined && value !== "") ||
+          requiredFields.includes(key)
+        ) {
+          // Convert ward_no to integer
+          if (key === "ward_no" && value) {
+            formDataToSend.append(key, parseInt(value, 10));
+          } else if (value instanceof File) {
+            // Only append actual File objects
+            formDataToSend.append(key, value);
+          } else if (value !== null && value !== undefined) {
+            // Append the value (including empty string for validation)
+            formDataToSend.append(key, value);
+          }
+        }
+      }
+
       // Send POST request to the backend API
-      const response = await axios.post("http://localhost:8000/complaints/create-defamation/", combinedData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-  
+      const response = await axios.post(
+        "http://localhost:8000/complaints/create-defamation/",
+        formDataToSend
+      );
+
       if (response.status === 201) {
         // Handle successful response
         console.log("Complaint submitted successfully");
-        setShowDownloadButton(true);
+        alert("Defamation complaint submitted successfully!");
       }
     } catch (error) {
-      console.error("Error submitting complaint:", error);
+      console.error("Full error:", error);
+      console.error("Error response:", error.response?.data);
+      alert("Error: " + JSON.stringify(error.response?.data || error.message));
     }
-  
-    console.log('Received data from Defamation:', defamationData);
   };
   const handleFinancialSubmit = async (financialData) => {
     // Combine the initial form data and the financial-specific data
@@ -72,39 +103,186 @@ export default function Complaint() {
       ...formData,
       ...financialData,
     };
-  
-    console.log("Combined Data:", combinedData); // Log the combined data being sent
-  
+
+    console.log("Combined Data:", combinedData);
+
     setShowDownloadButton(true);
-  
-    // Uncomment the API call part when ready to test
-    // try {
-    //   // Send POST request to the backend API
-    //   const response = await axios.post("http://localhost:8000/complaints/create-financial/", combinedData, {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
-  
-    //   if (response.status === 201) {
-    //     // Handle successful response
-    //     console.log("Complaint submitted successfully");
-    //     setShowDownloadButton(true);
-    //   }
-    // } catch (error) {
-    //   console.error("Error submitting complaint:", error);
-    // }
-  
-    console.log('Received data from Financial:', financialData);
+
+    try {
+      // Create FormData to handle file uploads
+      const formDataToSend = new FormData();
+
+      // Required fields that should always be included
+      const requiredFields = [
+        "description",
+        "medium",
+        "contact_no",
+        "contact_email",
+      ];
+
+      // Add all fields to FormData
+      for (const key in combinedData) {
+        const value = combinedData[key];
+
+        // Include if: not null/undefined, OR it's a required field
+        if (
+          (value !== null && value !== undefined && value !== "") ||
+          requiredFields.includes(key)
+        ) {
+          // Convert ward_no to integer
+          if (key === "ward_no" && value) {
+            formDataToSend.append(key, parseInt(value, 10));
+          } else if (value instanceof File) {
+            // Only append actual File objects
+            formDataToSend.append(key, value);
+          } else if (value !== null && value !== undefined) {
+            // Append the value (including empty string for validation)
+            formDataToSend.append(key, value);
+          }
+        }
+      }
+
+      // Send POST request to the backend API
+      const response = await axios.post(
+        "http://localhost:8000/complaints/create-financial-fraud/",
+        formDataToSend
+      );
+
+      if (response.status === 201) {
+        // Handle successful response
+        console.log("Complaint submitted successfully");
+        alert("Financial fraud complaint submitted successfully!");
+      }
+    } catch (error) {
+      console.error("Full error:", error);
+      console.error("Error response:", error.response?.data);
+      alert("Error: " + JSON.stringify(error.response?.data || error.message));
+    }
   };
-  const handleSocialSubmit = (data) => {
-    setSocialData(data);
-    console.log('Received data from Social:', data);
-  }
-  const handleOthersSubmit = (data) => {
-    setOthersData(data);
-    console.log('Received data from Others:', data);
-  }
+  const handleSocialSubmit = async (socialData) => {
+    // Combine the initial form data and the social-specific data
+    const combinedData = {
+      ...formData,
+      ...socialData,
+    };
+
+    console.log("Combined Data:", combinedData);
+
+    setShowDownloadButton(true);
+
+    try {
+      // Create FormData to handle file uploads
+      const formDataToSend = new FormData();
+
+      // Required fields that should always be included
+      const requiredFields = [
+        "description",
+        "medium",
+        "contact_no",
+        "contact_email",
+      ];
+
+      // Add all fields to FormData
+      for (const key in combinedData) {
+        const value = combinedData[key];
+
+        // Include if: not null/undefined, OR it's a required field
+        if (
+          (value !== null && value !== undefined && value !== "") ||
+          requiredFields.includes(key)
+        ) {
+          // Convert ward_no to integer
+          if (key === "ward_no" && value) {
+            formDataToSend.append(key, parseInt(value, 10));
+          } else if (value instanceof File) {
+            // Only append actual File objects
+            formDataToSend.append(key, value);
+          } else if (value !== null && value !== undefined) {
+            // Append the value (including empty string for validation)
+            formDataToSend.append(key, value);
+          }
+        }
+      }
+
+      // Send POST request to the backend API
+      const response = await axios.post(
+        "http://localhost:8000/complaints/create-social-media-hack/",
+        formDataToSend
+      );
+
+      if (response.status === 201) {
+        // Handle successful response
+        console.log("Complaint submitted successfully");
+        alert("Social media hack complaint submitted successfully!");
+      }
+    } catch (error) {
+      console.error("Full error:", error);
+      console.error("Error response:", error.response?.data);
+      alert("Error: " + JSON.stringify(error.response?.data || error.message));
+    }
+  };
+  const handleOthersSubmit = async (othersData) => {
+    // Combine the initial form data and the others-specific data
+    const combinedData = {
+      ...formData,
+      ...othersData,
+    };
+
+    console.log("Combined Data:", combinedData);
+
+    setShowDownloadButton(true);
+
+    try {
+      // Create FormData to handle file uploads
+      const formDataToSend = new FormData();
+
+      // Required fields that should always be included
+      const requiredFields = [
+        "description",
+        "medium",
+        "contact_no",
+        "contact_email",
+      ];
+
+      // Add all fields to FormData
+      for (const key in combinedData) {
+        const value = combinedData[key];
+
+        // Include if: not null/undefined, OR it's a required field
+        if (
+          (value !== null && value !== undefined && value !== "") ||
+          requiredFields.includes(key)
+        ) {
+          // Convert ward_no to integer
+          if (key === "ward_no" && value) {
+            formDataToSend.append(key, parseInt(value, 10));
+          } else if (value instanceof File) {
+            // Only append actual File objects
+            formDataToSend.append(key, value);
+          } else if (value !== null && value !== undefined) {
+            // Append the value (including empty string for validation)
+            formDataToSend.append(key, value);
+          }
+        }
+      }
+
+      // Send POST request to the backend API
+      const response = await axios.post(
+        "http://localhost:8000/complaints/create-other/",
+        formDataToSend
+      );
+
+      if (response.status === 201) {
+        // Handle successful response
+        console.log("Complaint submitted successfully");
+        alert("Other crime complaint submitted successfully!");
+      }
+    } catch (error) {
+      console.error("Full error:", error);
+      console.error("Error response:", error.response?.data);
+      alert("Error: " + JSON.stringify(error.response?.data || error.message));
+    }
+  };
   const onComplaintTypeChange = (event) => {
     setComplaintType(event.target.value);
   };
@@ -112,9 +290,7 @@ export default function Complaint() {
   const [districts, setDistricts] = useState([]);
 
   const DISTRICT_CHOICES = {
-    "Select Province": [
-      ["Select District", "Select District"],
-    ],
+    "Select Province": [["Select District", "Select District"]],
     "Province 1": [
       ["Bhojpur", "Bhojpur"],
       ["Dhankuta", "Dhankuta"],
@@ -237,7 +413,9 @@ export default function Complaint() {
 
   const handleNext = async (e) => {
     e.preventDefault();
-    const randomComplaintId = Math.floor(1000000 + Math.random() * 9000000).toString();
+    const randomComplaintId = Math.floor(
+      1000000 + Math.random() * 9000000
+    ).toString();
     setFormData({
       ...formData,
       complaint_id: randomComplaintId,
@@ -252,12 +430,16 @@ export default function Complaint() {
     doc.text(date, 150, 10); // Date at the top right
 
     doc.text(10, 20, "Respected Investigator,");
-    doc.text(10, 30, "Subject: Request to take action regarding the cyber crime incident.");
+    doc.text(
+      10,
+      30,
+      "Subject: Request to take action regarding the cyber crime incident."
+    );
 
     const introText = `In the above regard, I have submitted a written request to the petitioner/applicant to take action as per the law as the following cyber crime incident has occurred.\n\nThe following is the information about the incident:\n\n1.Original ID/URL: ${formData.evidence_links}\n2.Medium of Crime: ${formData.medium}\n3.Unique Id Number: ${formData.unique_id_number}\n4.Summary of the crime: ${formData.description}\n\nI know that the above statement is true and correct. If it is found to be false, I will be held accountable according to the law.\n\nDetails of the applicant:\nName: ${formData.victim_Name}\nDate of Birth: ${formData.date_of_birth}\nAddress: ${formData.city}\nContact No: ${formData.contact_no}\nContact Email: ${formData.contact_email}\nGuardian No: ${formData.guardian_no}`;
     const introLines = doc.splitTextToSize(introText, 180);
     doc.text(10, 40, introLines);
-    doc.save('complaint.pdf');
+    doc.save("complaint.pdf");
   };
 
   return (
@@ -280,7 +462,10 @@ export default function Complaint() {
                   <h4>Defamation Complaint Form</h4>
                 </div>
                 <div className="card-body">
-                  <form className="font-sans m-6 max-w-4xl mx-auto" onSubmit={handleNext}>
+                  <form
+                    className="font-sans m-6 max-w-4xl mx-auto"
+                    onSubmit={handleNext}
+                  >
                     <div className="grid sm:grid-cols-2 gap-10">
                       <div className="relative flex items-center">
                         <label>Victim Name</label>
@@ -290,7 +475,6 @@ export default function Complaint() {
                           name="victim_Name"
                           value={formData.victim_Name}
                           onChange={handleChange}
-
                           required
                         />
                       </div>
@@ -326,12 +510,24 @@ export default function Complaint() {
                         >
                           <option value="">Select Province</option>
                           <option value="Province 1">Province 1</option>
-                          <option value="Province 2">Province 2</option>
-                          <option value="Bagmati Province">Bagmati Province</option>
-                          <option value="Gandaki Province">Gandaki Province</option>
-                          <option value="Lumbini Province">Lumbini Province</option>
-                          <option value="Karnali Province">Karnali Province</option>
-                          <option value="Sudurpashchim Province">Sudurpashchim Province</option>
+                          <option value="Madhesh Province">
+                            Madhesh Province
+                          </option>
+                          <option value="Bagmati Province">
+                            Bagmati Province
+                          </option>
+                          <option value="Gandaki Province">
+                            Gandaki Province
+                          </option>
+                          <option value="Lumbini Province">
+                            Lumbini Province
+                          </option>
+                          <option value="Karnali Province">
+                            Karnali Province
+                          </option>
+                          <option value="Sudurpashchim Province">
+                            Sudurpashchim Province
+                          </option>
                         </select>
                       </div>
 
@@ -362,10 +558,21 @@ export default function Complaint() {
                         />
                       </div>
                       <div className="relative flex items-center">
+                        <label>Ward No</label>
+                        <input
+                          type="number"
+                          className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
+                          name="ward_no"
+                          value={formData.ward_no}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                      <div className="relative flex items-center">
                         <label>Unique ID</label>
                         <input
                           type="text"
-                          placeholder='Citizenship / Passport / Driving License'
+                          placeholder="Citizenship / Passport / Driving License"
                           className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                           name="unique_id_number"
                           value={formData.unique_id_number}
@@ -380,6 +587,7 @@ export default function Complaint() {
                           name="contact_no"
                           value={formData.contact_no}
                           onChange={handleChange}
+                          required
                         />
                       </div>
                       <div className="relative flex items-center">
@@ -393,13 +601,14 @@ export default function Complaint() {
                         />
                       </div>
                       <div className="relative flex items-center">
-                        <label>Guardian No</label>
+                        <label>Guardian No (Optional)</label>
                         <input
                           type="text"
                           className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                           name="guardian_no"
                           value={formData.guardian_no}
                           onChange={handleChange}
+                          placeholder="+977-1234567890 (optional)"
                         />
                       </div>
                       <div className="relative flex items-center">
@@ -409,16 +618,20 @@ export default function Complaint() {
                           name="description"
                           value={formData.description}
                           onChange={handleChange}
+                          required
                         ></textarea>
                       </div>
                       <div className="relative flex items-center">
                         <label>Medium</label>
-                        <select>
-                          className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
+                        <select
+                          className="px-4 py-3.5 bg-white text-black w-full
+                          text-sm border-2 border-gray-100 focus:border-blue-500
+                          rounded outline-none"
                           name="medium"
                           value={formData.medium}
                           onChange={handleChange}
-                          <option value="">Select Medium</option>
+                          required
+                        >
                           <option value="FB">Facebook</option>
                           <option value="messenger">Messenger</option>
                           <option value="whatsapp">Whatsapp</option>
@@ -430,13 +643,14 @@ export default function Complaint() {
                         </select>
                       </div>
                       <div className="relative flex items-center">
-                        <label>Evidence Links</label>
+                        <label>Evidence Links (Optional)</label>
                         <input
                           type="text"
                           className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
                           name="evidence_links"
                           value={formData.evidence_links}
                           onChange={handleChange}
+                          placeholder="https://example.com (optional)"
                         />
                       </div>
                       <div className="relative flex items-center">
@@ -444,7 +658,9 @@ export default function Complaint() {
                         <input
                           type="file"
                           className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
-                          onChange={(e) => handleFileChange(e, 'unique_id_card')}
+                          onChange={(e) =>
+                            handleFileChange(e, "unique_id_card")
+                          }
                         />
                       </div>
                       <div className="relative flex items-center">
@@ -452,7 +668,7 @@ export default function Complaint() {
                         <input
                           type="file"
                           className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
-                          onChange={(e) => handleFileChange(e, 'signature')}
+                          onChange={(e) => handleFileChange(e, "signature")}
                         />
                       </div>
                       <div className="relative flex items-center">
@@ -460,7 +676,7 @@ export default function Complaint() {
                         <input
                           type="file"
                           className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
-                          onChange={(e) => handleFileChange(e, 'screenshots')}
+                          onChange={(e) => handleFileChange(e, "screenshots")}
                         />
                       </div>
                       <div className="relative flex items-center">
@@ -468,12 +684,14 @@ export default function Complaint() {
                         <input
                           type="file"
                           className="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
-                          onChange={(e) => handleFileChange(e, 'other_doc')}
+                          onChange={(e) => handleFileChange(e, "other_doc")}
                         />
                       </div>
-
                     </div>
-                    <button type="submit" className="mt-8 px-6 py-2.5 w-full text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-all">
+                    <button
+                      type="submit"
+                      className="mt-8 px-6 py-2.5 w-full text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-all"
+                    >
                       Next
                     </button>
                   </form>
@@ -485,10 +703,18 @@ export default function Complaint() {
       )}
       {page === 2 && (
         <div>
-          {complaintType === 'defamation' && <Defamation onSubmit={handleDefamationSubmit} />}
-          {complaintType === 'financial' && <Financial onSubmit={handleFinancialSubmit} />}
-          {complaintType === 'social' && <Social onSubmit={handleSocialSubmit} />}
-          {complaintType === 'others' && <Others onSubmit={handleOthersSubmit} />}
+          {complaintType === "defamation" && (
+            <Defamation onSubmit={handleDefamationSubmit} />
+          )}
+          {complaintType === "financial" && (
+            <Financial onSubmit={handleFinancialSubmit} />
+          )}
+          {complaintType === "social" && (
+            <Social onSubmit={handleSocialSubmit} />
+          )}
+          {complaintType === "others" && (
+            <Others onSubmit={handleOthersSubmit} />
+          )}
         </div>
       )}
       {showDownloadButton && (
@@ -499,7 +725,6 @@ export default function Complaint() {
           Download PDF
         </button>
       )}
-
     </div>
   );
 }
