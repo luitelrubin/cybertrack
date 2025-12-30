@@ -1,224 +1,235 @@
-export default function DashboardComplaint({ data1, data2 }){
-    return(
-        <div>
-            <div className="flex justify-center py-5">
-            <div className="flex justify-center rounded-3xl w-1/6 bg-blue-200 h-[10%] py-4">
-                <h2 className="flex justify-center">Total Cases: 0</h2>
-            </div>
-            </div>
-            <h1>{data1}</h1>
-            <h1>{data2}</h1>
-            <div className="font-sans overflow-x-auto">
-      <table className="min-w-full bg-white">
-        <thead className="bg-gray-100 whitespace-nowrap">
-          <tr>
-            <th className="p-4 text-left text-xs font-semibold text-gray-800">
-              Name
-            </th>
-            <th className="p-4 text-left text-xs font-semibold text-gray-800">
-              Email
-            </th>
-            <th className="p-4 text-left text-xs font-semibold text-gray-800">
-              Role
-            </th>
-            <th className="p-4 text-left text-xs font-semibold text-gray-800">
-              Joined At
-            </th>
-            <th className="p-4 text-left text-xs font-semibold text-gray-800">
-              Actions
-            </th>
-          </tr>
-        </thead>
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-        <tbody className="whitespace-nowrap">
-          <tr className="hover:bg-gray-50">
-            <td className="p-4 text-[15px] text-gray-800">
-              John Doe
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              john@example.com
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              Admin
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              2022-05-15
-            </td>
-            <td className="p-4">
-              <button className="mr-4" title="Edit">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-blue-500 hover:fill-blue-700"
-                  viewBox="0 0 348.882 348.882">
-                  <path
-                    d="m333.988 11.758-.42-.383A43.363 43.363 0 0 0 304.258 0a43.579 43.579 0 0 0-32.104 14.153L116.803 184.231a14.993 14.993 0 0 0-3.154 5.37l-18.267 54.762c-2.112 6.331-1.052 13.333 2.835 18.729 3.918 5.438 10.23 8.685 16.886 8.685h.001c2.879 0 5.693-.592 8.362-1.76l52.89-23.138a14.985 14.985 0 0 0 5.063-3.626L336.771 73.176c16.166-17.697 14.919-45.247-2.783-61.418zM130.381 234.247l10.719-32.134.904-.99 20.316 18.556-.904.99-31.035 13.578zm184.24-181.304L182.553 197.53l-20.316-18.556L294.305 34.386c2.583-2.828 6.118-4.386 9.954-4.386 3.365 0 6.588 1.252 9.082 3.53l.419.383c5.484 5.009 5.87 13.546.861 19.03z"
-                    data-original="#000000" />
-                  <path
-                    d="M303.85 138.388c-8.284 0-15 6.716-15 15v127.347c0 21.034-17.113 38.147-38.147 38.147H68.904c-21.035 0-38.147-17.113-38.147-38.147V100.413c0-21.034 17.113-38.147 38.147-38.147h131.587c8.284 0 15-6.716 15-15s-6.716-15-15-15H68.904C31.327 32.266.757 62.837.757 100.413v180.321c0 37.576 30.571 68.147 68.147 68.147h181.798c37.576 0 68.147-30.571 68.147-68.147V153.388c.001-8.284-6.715-15-14.999-15z"
-                    data-original="#000000" />
-                </svg>
-              </button>
-              <button className="mr-4" title="Delete">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-red-500 hover:fill-red-700" viewBox="0 0 24 24">
-                  <path
-                    d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"
-                    data-original="#000000" />
-                  <path d="M11 17v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Zm4 0v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Z"
-                    data-original="#000000" />
-                </svg>
-              </button>
-            </td>
-          </tr>
+export default function DashboardComplaint({ data1, data2 }) {
+  const [allComplaints, setAllComplaints] = useState([]);
+  const [filteredComplaints, setFilteredComplaints] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-          <tr className="hover:bg-gray-50">
-            <td className="p-4 text-[15px] text-gray-800">
-              Jane Smith
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              jane@example.com
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              User
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              2022-07-20
-            </td>
-            <td className="p-4">
-              <button className="mr-4" title="Edit">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-blue-500 hover:fill-blue-700"
-                  viewBox="0 0 348.882 348.882">
-                  <path
-                    d="m333.988 11.758-.42-.383A43.363 43.363 0 0 0 304.258 0a43.579 43.579 0 0 0-32.104 14.153L116.803 184.231a14.993 14.993 0 0 0-3.154 5.37l-18.267 54.762c-2.112 6.331-1.052 13.333 2.835 18.729 3.918 5.438 10.23 8.685 16.886 8.685h.001c2.879 0 5.693-.592 8.362-1.76l52.89-23.138a14.985 14.985 0 0 0 5.063-3.626L336.771 73.176c16.166-17.697 14.919-45.247-2.783-61.418zM130.381 234.247l10.719-32.134.904-.99 20.316 18.556-.904.99-31.035 13.578zm184.24-181.304L182.553 197.53l-20.316-18.556L294.305 34.386c2.583-2.828 6.118-4.386 9.954-4.386 3.365 0 6.588 1.252 9.082 3.53l.419.383c5.484 5.009 5.87 13.546.861 19.03z"
-                    data-original="#000000" />
-                  <path
-                    d="M303.85 138.388c-8.284 0-15 6.716-15 15v127.347c0 21.034-17.113 38.147-38.147 38.147H68.904c-21.035 0-38.147-17.113-38.147-38.147V100.413c0-21.034 17.113-38.147 38.147-38.147h131.587c8.284 0 15-6.716 15-15s-6.716-15-15-15H68.904C31.327 32.266.757 62.837.757 100.413v180.321c0 37.576 30.571 68.147 68.147 68.147h181.798c37.576 0 68.147-30.571 68.147-68.147V153.388c.001-8.284-6.715-15-14.999-15z"
-                    data-original="#000000" />
-                </svg>
-              </button>
-              <button className="mr-4" title="Delete">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-red-500 hover:fill-red-700" viewBox="0 0 24 24">
-                  <path
-                    d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"
-                    data-original="#000000" />
-                  <path d="M11 17v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Zm4 0v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Z"
-                    data-original="#000000" />
-                </svg>
-              </button>
-            </td>
-          </tr>
+  useEffect(() => {
+    fetchComplaints();
+  }, []);
 
-          <tr className="hover:bg-gray-50">
-            <td className="p-4 text-[15px] text-gray-800">
-              Alen Doe
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              alen@example.com
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              User
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              2022-07-21
-            </td>
-            <td className="p-4">
-              <button className="mr-4" title="Edit">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-blue-500 hover:fill-blue-700"
-                  viewBox="0 0 348.882 348.882">
-                  <path
-                    d="m333.988 11.758-.42-.383A43.363 43.363 0 0 0 304.258 0a43.579 43.579 0 0 0-32.104 14.153L116.803 184.231a14.993 14.993 0 0 0-3.154 5.37l-18.267 54.762c-2.112 6.331-1.052 13.333 2.835 18.729 3.918 5.438 10.23 8.685 16.886 8.685h.001c2.879 0 5.693-.592 8.362-1.76l52.89-23.138a14.985 14.985 0 0 0 5.063-3.626L336.771 73.176c16.166-17.697 14.919-45.247-2.783-61.418zM130.381 234.247l10.719-32.134.904-.99 20.316 18.556-.904.99-31.035 13.578zm184.24-181.304L182.553 197.53l-20.316-18.556L294.305 34.386c2.583-2.828 6.118-4.386 9.954-4.386 3.365 0 6.588 1.252 9.082 3.53l.419.383c5.484 5.009 5.87 13.546.861 19.03z"
-                    data-original="#000000" />
-                  <path
-                    d="M303.85 138.388c-8.284 0-15 6.716-15 15v127.347c0 21.034-17.113 38.147-38.147 38.147H68.904c-21.035 0-38.147-17.113-38.147-38.147V100.413c0-21.034 17.113-38.147 38.147-38.147h131.587c8.284 0 15-6.716 15-15s-6.716-15-15-15H68.904C31.327 32.266.757 62.837.757 100.413v180.321c0 37.576 30.571 68.147 68.147 68.147h181.798c37.576 0 68.147-30.571 68.147-68.147V153.388c.001-8.284-6.715-15-14.999-15z"
-                    data-original="#000000" />
-                </svg>
-              </button>
-              <button className="mr-4" title="Delete">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-red-500 hover:fill-red-700" viewBox="0 0 24 24">
-                  <path
-                    d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"
-                    data-original="#000000" />
-                  <path d="M11 17v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Zm4 0v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Z"
-                    data-original="#000000" />
-                </svg>
-              </button>
-            </td>
-          </tr>
+  useEffect(() => {
+    // Filter complaints whenever data1 (tab) or data2 (status button) changes
+    filterComplaints(data1, data2);
+  }, [data1, data2, allComplaints]);
 
-          <tr className="hover:bg-gray-50">
-            <td className="p-4 text-[15px] text-gray-800">
-              Kelwin mark
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              kelwin@example.com
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              User
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              2020-07-06
-            </td>
-            <td className="p-4">
-              <button className="mr-4" title="Edit">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-blue-500 hover:fill-blue-700"
-                  viewBox="0 0 348.882 348.882">
-                  <path
-                    d="m333.988 11.758-.42-.383A43.363 43.363 0 0 0 304.258 0a43.579 43.579 0 0 0-32.104 14.153L116.803 184.231a14.993 14.993 0 0 0-3.154 5.37l-18.267 54.762c-2.112 6.331-1.052 13.333 2.835 18.729 3.918 5.438 10.23 8.685 16.886 8.685h.001c2.879 0 5.693-.592 8.362-1.76l52.89-23.138a14.985 14.985 0 0 0 5.063-3.626L336.771 73.176c16.166-17.697 14.919-45.247-2.783-61.418zM130.381 234.247l10.719-32.134.904-.99 20.316 18.556-.904.99-31.035 13.578zm184.24-181.304L182.553 197.53l-20.316-18.556L294.305 34.386c2.583-2.828 6.118-4.386 9.954-4.386 3.365 0 6.588 1.252 9.082 3.53l.419.383c5.484 5.009 5.87 13.546.861 19.03z"
-                    data-original="#000000" />
-                  <path
-                    d="M303.85 138.388c-8.284 0-15 6.716-15 15v127.347c0 21.034-17.113 38.147-38.147 38.147H68.904c-21.035 0-38.147-17.113-38.147-38.147V100.413c0-21.034 17.113-38.147 38.147-38.147h131.587c8.284 0 15-6.716 15-15s-6.716-15-15-15H68.904C31.327 32.266.757 62.837.757 100.413v180.321c0 37.576 30.571 68.147 68.147 68.147h181.798c37.576 0 68.147-30.571 68.147-68.147V153.388c.001-8.284-6.715-15-14.999-15z"
-                    data-original="#000000" />
-                </svg>
-              </button>
-              <button className="mr-4" title="Delete">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-red-500 hover:fill-red-700" viewBox="0 0 24 24">
-                  <path
-                    d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"
-                    data-original="#000000" />
-                  <path d="M11 17v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Zm4 0v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Z"
-                    data-original="#000000" />
-                </svg>
-              </button>
-            </td>
-          </tr>
+  const fetchComplaints = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("http://localhost:8000/complaints/");
+      console.log("API Response:", response.data);
+      // Handle both array and paginated response formats
+      const data = Array.isArray(response.data)
+        ? response.data
+        : response.data.results || [];
+      console.log("Fetched complaints:", data);
+      setAllComplaints(data);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching complaints:", err);
+      setError("Failed to load complaints. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-          <tr className="hover:bg-gray-50">
-            <td className="p-4 text-[15px] text-gray-800">
-              Dustin
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              dustin@example.com
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              User
-            </td>
-            <td className="p-4 text-[15px] text-gray-800">
-              2021-07-06
-            </td>
-            <td className="p-4">
-              <button className="mr-4" title="Edit">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-blue-500 hover:fill-blue-700"
-                  viewBox="0 0 348.882 348.882">
-                  <path
-                    d="m333.988 11.758-.42-.383A43.363 43.363 0 0 0 304.258 0a43.579 43.579 0 0 0-32.104 14.153L116.803 184.231a14.993 14.993 0 0 0-3.154 5.37l-18.267 54.762c-2.112 6.331-1.052 13.333 2.835 18.729 3.918 5.438 10.23 8.685 16.886 8.685h.001c2.879 0 5.693-.592 8.362-1.76l52.89-23.138a14.985 14.985 0 0 0 5.063-3.626L336.771 73.176c16.166-17.697 14.919-45.247-2.783-61.418zM130.381 234.247l10.719-32.134.904-.99 20.316 18.556-.904.99-31.035 13.578zm184.24-181.304L182.553 197.53l-20.316-18.556L294.305 34.386c2.583-2.828 6.118-4.386 9.954-4.386 3.365 0 6.588 1.252 9.082 3.53l.419.383c5.484 5.009 5.87 13.546.861 19.03z"
-                    data-original="#000000" />
-                  <path
-                    d="M303.85 138.388c-8.284 0-15 6.716-15 15v127.347c0 21.034-17.113 38.147-38.147 38.147H68.904c-21.035 0-38.147-17.113-38.147-38.147V100.413c0-21.034 17.113-38.147 38.147-38.147h131.587c8.284 0 15-6.716 15-15s-6.716-15-15-15H68.904C31.327 32.266.757 62.837.757 100.413v180.321c0 37.576 30.571 68.147 68.147 68.147h181.798c37.576 0 68.147-30.571 68.147-68.147V153.388c.001-8.284-6.715-15-14.999-15z"
-                    data-original="#000000" />
-                </svg>
-              </button>
-              <button className="mr-4" title="Delete">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-red-500 hover:fill-red-700" viewBox="0 0 24 24">
-                  <path
-                    d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"
-                    data-original="#000000" />
-                  <path d="M11 17v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Zm4 0v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Z"
-                    data-original="#000000" />
-                </svg>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  const getComplaintType = (complaint) => {
+    // Use the complaint_type field from API
+    if (complaint.complaint_type) {
+      return complaint.complaint_type;
+    }
+
+    // Fallback to field detection if type not provided
+    if (complaint.amount) return "financial";
+    if (complaint.social_media_name) return "social";
+    if (complaint.activity && complaint.frauder_name) return "defamation";
+    if (complaint.subject) return "others";
+    return "unknown";
+  };
+
+  const getStatusValue = (buttonName) => {
+    const statusMap = {
+      pending: "Pending",
+      inaction: "In Action",
+      scam: "Scam",
+      resolved: "Resolved",
+      closed: "Closed",
+    };
+    return statusMap[buttonName] || buttonName;
+  };
+
+  const filterComplaints = (tabType, statusButton) => {
+    let filtered = allComplaints;
+
+    console.log(
+      "Filtering with tabType:",
+      tabType,
+      "statusButton:",
+      statusButton
+    );
+    console.log("All complaints before filter:", allComplaints);
+
+    // If no filters are selected, show all
+    if (!tabType || !statusButton) {
+      setFilteredComplaints(allComplaints);
+      return;
+    }
+
+    // Filter by complaint type (tab)
+    if (tabType && tabType !== "all") {
+      filtered = filtered.filter(
+        (complaint) => getComplaintType(complaint) === tabType
+      );
+      console.log("After type filter:", filtered);
+    }
+
+    // Filter by status (button)
+    if (statusButton && statusButton !== "all") {
+      const statusValue = getStatusValue(statusButton);
+      filtered = filtered.filter(
+        (complaint) => complaint.status === statusValue
+      );
+      console.log("After status filter:", filtered);
+    }
+
+    console.log("Final filtered complaints:", filtered);
+    setFilteredComplaints(filtered);
+  };
+
+  const getStatusBadge = (status) => {
+    const statusColors = {
+      pending: "bg-yellow-100 text-yellow-800",
+      resolved: "bg-green-100 text-green-800",
+      rejected: "bg-red-100 text-red-800",
+      closed: "bg-red-100 text-red-800",
+      spam: "bg-orange-100 text-orange-800",
+      under_review: "bg-blue-100 text-blue-800",
+    };
+    return statusColors[status] || "bg-gray-100 text-gray-800";
+  };
+
+  const getComplaintTypeDisplay = (complaint) => {
+    const type = getComplaintType(complaint);
+    const displayNames = {
+      financial: "Financial Fraud",
+      social: "Social Media Hack",
+      defamation: "Defamation",
+      others: "Other Crime",
+      unknown: "Unknown",
+    };
+    return displayNames[type] || type;
+  };
+
+  if (loading) {
+    return (
+      <div className="w-full max-w-7xl mx-auto p-6">
+        <div className="flex items-center justify-center min-h-64">
+          <p className="text-gray-600 text-lg">Loading complaints...</p>
         </div>
-    )
+      </div>
+    );
+  }
 
+  if (error) {
+    return (
+      <div className="w-full max-w-7xl mx-auto p-6">
+        <div className="bg-red-50 border-2 border-red-500 rounded-lg p-6">
+          <p className="text-red-700 text-lg font-medium">{error}</p>
+          <button
+            onClick={fetchComplaints}
+            className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full max-w-7xl mx-auto p-6">
+      <div className="flex justify-center mb-6">
+        <div className="rounded-3xl w-48 bg-blue-200 px-6 py-4">
+          <h2 className="text-center font-semibold text-gray-800">
+            Total Cases: {filteredComplaints.length}
+          </h2>
+        </div>
+      </div>
+
+      {filteredComplaints.length === 0 ? (
+        <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-8 text-center">
+          <p className="text-gray-600 text-lg">
+            No complaints available for this filter.
+          </p>
+        </div>
+      ) : (
+        <div className="font-sans overflow-x-auto">
+          <table className="min-w-full bg-white">
+            <thead className="bg-gray-100 whitespace-nowrap">
+              <tr>
+                <th className="p-4 text-left text-xs font-semibold text-gray-800">
+                  Complaint ID
+                </th>
+                <th className="p-4 text-left text-xs font-semibold text-gray-800">
+                  Victim Name
+                </th>
+                <th className="p-4 text-left text-xs font-semibold text-gray-800">
+                  Email
+                </th>
+                <th className="p-4 text-left text-xs font-semibold text-gray-800">
+                  Type
+                </th>
+                <th className="p-4 text-left text-xs font-semibold text-gray-800">
+                  Contact
+                </th>
+                <th className="p-4 text-left text-xs font-semibold text-gray-800">
+                  Date
+                </th>
+                <th className="p-4 text-left text-xs font-semibold text-gray-800">
+                  Status
+                </th>
+              </tr>
+            </thead>
+
+            <tbody className="whitespace-nowrap">
+              {filteredComplaints.map((complaint) => (
+                <tr key={complaint.id} className="hover:bg-gray-50 border-t">
+                  <td className="p-4 text-[15px] text-gray-800 font-medium">
+                    {complaint.complaint_id || complaint.id}
+                  </td>
+                  <td className="p-4 text-[15px] text-gray-800">
+                    {complaint.victim_Name}
+                  </td>
+                  <td className="p-4 text-[15px] text-gray-800">
+                    {complaint.contact_email}
+                  </td>
+                  <td className="p-4 text-[15px] text-gray-800">
+                    {getComplaintTypeDisplay(complaint)}
+                  </td>
+                  <td className="p-4 text-[15px] text-gray-800">
+                    {complaint.contact_no}
+                  </td>
+                  <td className="p-4 text-[15px] text-gray-800">
+                    {new Date(complaint.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="p-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(
+                        complaint.status
+                      )}`}
+                    >
+                      {complaint.status || "Pending"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
 }

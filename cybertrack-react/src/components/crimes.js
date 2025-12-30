@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export default function Crime() {
   return (
@@ -29,23 +29,17 @@ export default function Crime() {
 
       <div className="absolute bottom-[0vh] w-full flex justify-between px-[4vw]">
         {/* Button 1 */}
-        <button
-          className="border-[0.3vw] border-[var(--border-color)] rounded-[2vh] text-[2vw] font-semibold py-[2vh] px-[6vw] mt-[12vh] mx-auto cursor-pointer transform translate-y-[1vh] hover:translate-y-[-1vh] transition-all duration-300 bg-[var(--background)] text-[var(--text-highlights)] hover:bg-[var(--text-highlights)] hover:text-[var(--background)]"
-        >
+        <button className="border-[0.3vw] border-[var(--border-color)] rounded-[2vh] text-[2vw] font-semibold py-[2vh] px-[6vw] mt-[12vh] mx-auto cursor-pointer transform translate-y-[1vh] hover:translate-y-[-1vh] transition-all duration-300 bg-[var(--background)] text-[var(--text-highlights)] hover:bg-[var(--text-highlights)] hover:text-[var(--background)]">
           Button 1
         </button>
 
         {/* Button 2 */}
-        <button
-          className="border-[0.3vw] border-[var(--border-color)] rounded-[2vh] text-[2vw] font-semibold py-[2vh] px-[6vw] mt-[12vh] mx-auto cursor-pointer transform translate-y-[1vh] hover:translate-y-[-1vh] transition-all duration-300 bg-[var(--background)] text-[var(--text-highlights)] hover:bg-[var(--text-highlights)] hover:text-[var(--background)]"
-        >
+        <button className="border-[0.3vw] border-[var(--border-color)] rounded-[2vh] text-[2vw] font-semibold py-[2vh] px-[6vw] mt-[12vh] mx-auto cursor-pointer transform translate-y-[1vh] hover:translate-y-[-1vh] transition-all duration-300 bg-[var(--background)] text-[var(--text-highlights)] hover:bg-[var(--text-highlights)] hover:text-[var(--background)]">
           Button 2
         </button>
 
         {/* Button 3 */}
-        <button
-          className="border-[0.3vw] border-[var(--border-color)] rounded-[2vh] text-[2vw] font-semibold py-[2vh] px-[6vw] mt-[12vh] mx-auto cursor-pointer transform translate-y-[1vh] hover:translate-y-[-1vh] transition-all duration-300 bg-[var(--background)] text-[var(--text-highlights)] hover:bg-[var(--text-highlights)] hover:text-[var(--background)]"
-        >
+        <button className="border-[0.3vw] border-[var(--border-color)] rounded-[2vh] text-[2vw] font-semibold py-[2vh] px-[6vw] mt-[12vh] mx-auto cursor-pointer transform translate-y-[1vh] hover:translate-y-[-1vh] transition-all duration-300 bg-[var(--background)] text-[var(--text-highlights)] hover:bg-[var(--text-highlights)] hover:text-[var(--background)]">
           Button 3
         </button>
       </div>
