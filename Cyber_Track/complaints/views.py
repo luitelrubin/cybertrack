@@ -94,6 +94,18 @@ class ListAllComplaintsView(generics.ListAPIView):  # To List All Complaints
 
         queryset = self.get_queryset()
 
+        # Filter by complaint_type if provided
+        complaint_type = request.query_params.get("complaint_type", None)
+        if complaint_type:
+            queryset = [
+                c for c in queryset if self._get_complaint_type(c) == complaint_type
+            ]
+
+        # Filter by status if provided
+        status = request.query_params.get("status", None)
+        if status:
+            queryset = [c for c in queryset if c.status == status]
+
         page = self.paginate_queryset(queryset)
         if page is not None:
             financial_fraud_page = [
@@ -131,13 +143,17 @@ class ListAllComplaintsView(generics.ListAPIView):  # To List All Complaints
             return self.get_paginated_response(all_complaints)
 
         financial_fraud_serializer = FinancialFraudComplaintSerializer(
-            queryset, many=True
+            [c for c in queryset if isinstance(c, FinancialFraudComplaint)], many=True
         )
         social_media_hack_serializer = SocialMediaHackComplaintSerializer(
-            queryset, many=True
+            [c for c in queryset if isinstance(c, SocialMediaHackComplaint)], many=True
         )
-        defamation_serializer = DefamationComplaintSerializer(queryset, many=True)
-        other_complaints_serializer = OtherComplaintSerializer(queryset, many=True)
+        defamation_serializer = DefamationComplaintSerializer(
+            [c for c in queryset if isinstance(c, DefamationComplaint)], many=True
+        )
+        other_complaints_serializer = OtherComplaintSerializer(
+            [c for c in queryset if isinstance(c, OtherComplaint)], many=True
+        )
 
         all_complaints = (
             financial_fraud_serializer.data
@@ -146,7 +162,20 @@ class ListAllComplaintsView(generics.ListAPIView):  # To List All Complaints
             + other_complaints_serializer.data
         )
 
+        # Return as a consistent format (list) - frontend will handle it
         return Response(all_complaints)
+
+    def _get_complaint_type(self, complaint):
+        """Helper method to determine complaint type"""
+        if isinstance(complaint, FinancialFraudComplaint):
+            return "financial"
+        elif isinstance(complaint, SocialMediaHackComplaint):
+            return "social"
+        elif isinstance(complaint, DefamationComplaint):
+            return "defamation"
+        elif isinstance(complaint, OtherComplaint):
+            return "others"
+        return "unknown"
 
 
 class AllComplaintUpdateView(generics.GenericAPIView):

@@ -8,25 +8,66 @@ export default function DashboardComplaint({ data1, data2 }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchComplaints();
-  }, []);
+    fetchComplaints(data1, data2);
+  }, [data1, data2]);
 
-  useEffect(() => {
-    // Filter complaints whenever data1 (tab) or data2 (status button) changes
-    filterComplaints(data1, data2);
-  }, [data1, data2, allComplaints]);
-
-  const fetchComplaints = async () => {
+  const fetchComplaints = async (complaintType, status) => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:8000/complaints/");
-      console.log("API Response:", response.data);
+      // Build query parameters - only add if not "all"
+      let url = "http://localhost:8000/complaints/";
+      const params = new URLSearchParams();
+
+      // Only filter by type if it's not "all"
+      if (complaintType && complaintType !== "all") {
+        params.append("complaint_type", complaintType);
+      }
+
+      // Only filter by status if it's not "all"
+      if (status && status !== "all") {
+        // Map frontend status to backend status values
+        const statusMap = {
+          pending: "Pending",
+          inaction: "In Action",
+          scam: "Scam",
+          resolved: "Resolved",
+          closed: "Closed",
+        };
+        params.append("status", statusMap[status] || status);
+      }
+
+      if (params.toString()) {
+        url += "?" + params.toString();
+      }
+
+      console.log("Fetching from URL:", url);
+      const response = await axios.get(url);
+      console.log("Raw API Response:", response);
+      console.log("Response data:", response.data);
+      console.log("Response status:", response.status);
+
+      let data = [];
+
       // Handle both array and paginated response formats
-      const data = Array.isArray(response.data)
-        ? response.data
-        : response.data.results || [];
-      console.log("Fetched complaints:", data);
-      setAllComplaints(data);
+      if (Array.isArray(response.data)) {
+        data = response.data;
+        console.log("Response is array:", data);
+      } else if (response.data && response.data.results) {
+        // Paginated response
+        data = response.data.results;
+        console.log("Response is paginated:", data);
+      } else if (
+        response.data &&
+        typeof response.data === "object" &&
+        !Array.isArray(response.data)
+      ) {
+        // Might be a single object response
+        console.warn("Unexpected response format:", response.data);
+        data = [];
+      }
+
+      console.log("Final processed data:", data, "Length:", data.length);
+      setFilteredComplaints(data);
       setError(null);
     } catch (err) {
       console.error("Error fetching complaints:", err);
@@ -37,76 +78,18 @@ export default function DashboardComplaint({ data1, data2 }) {
   };
 
   const getComplaintType = (complaint) => {
-    // Use the complaint_type field from API
-    if (complaint.complaint_type) {
-      return complaint.complaint_type;
-    }
-
-    // Fallback to field detection if type not provided
-    if (complaint.amount) return "financial";
-    if (complaint.social_media_name) return "social";
-    if (complaint.activity && complaint.frauder_name) return "defamation";
-    if (complaint.subject) return "others";
-    return "unknown";
-  };
-
-  const getStatusValue = (buttonName) => {
-    const statusMap = {
-      pending: "Pending",
-      inaction: "In Action",
-      scam: "Scam",
-      resolved: "Resolved",
-      closed: "Closed",
-    };
-    return statusMap[buttonName] || buttonName;
-  };
-
-  const filterComplaints = (tabType, statusButton) => {
-    let filtered = allComplaints;
-
-    console.log(
-      "Filtering with tabType:",
-      tabType,
-      "statusButton:",
-      statusButton
-    );
-    console.log("All complaints before filter:", allComplaints);
-
-    // If no filters are selected, show all
-    if (!tabType || !statusButton) {
-      setFilteredComplaints(allComplaints);
-      return;
-    }
-
-    // Filter by complaint type (tab)
-    if (tabType && tabType !== "all") {
-      filtered = filtered.filter(
-        (complaint) => getComplaintType(complaint) === tabType
-      );
-      console.log("After type filter:", filtered);
-    }
-
-    // Filter by status (button)
-    if (statusButton && statusButton !== "all") {
-      const statusValue = getStatusValue(statusButton);
-      filtered = filtered.filter(
-        (complaint) => complaint.status === statusValue
-      );
-      console.log("After status filter:", filtered);
-    }
-
-    console.log("Final filtered complaints:", filtered);
-    setFilteredComplaints(filtered);
+    // The API includes complaint_type field from serializer
+    return complaint.complaint_type || "unknown";
   };
 
   const getStatusBadge = (status) => {
+    // Map backend status values to color classes
     const statusColors = {
-      pending: "bg-yellow-100 text-yellow-800",
-      resolved: "bg-green-100 text-green-800",
-      rejected: "bg-red-100 text-red-800",
-      closed: "bg-red-100 text-red-800",
-      spam: "bg-orange-100 text-orange-800",
-      under_review: "bg-blue-100 text-blue-800",
+      Pending: "bg-yellow-100 text-yellow-800",
+      "In Action": "bg-blue-100 text-blue-800",
+      Scam: "bg-orange-100 text-orange-800",
+      Resolved: "bg-green-100 text-green-800",
+      Closed: "bg-red-100 text-red-800",
     };
     return statusColors[status] || "bg-gray-100 text-gray-800";
   };
@@ -139,7 +122,7 @@ export default function DashboardComplaint({ data1, data2 }) {
         <div className="bg-red-50 border-2 border-red-500 rounded-lg p-6">
           <p className="text-red-700 text-lg font-medium">{error}</p>
           <button
-            onClick={fetchComplaints}
+            onClick={() => fetchComplaints(data1, data2)}
             className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
           >
             Retry
@@ -196,7 +179,10 @@ export default function DashboardComplaint({ data1, data2 }) {
 
             <tbody className="whitespace-nowrap">
               {filteredComplaints.map((complaint) => (
-                <tr key={complaint.id} className="hover:bg-gray-50 border-t">
+                <tr
+                  key={complaint.complaint_id}
+                  className="hover:bg-gray-50 border-t"
+                >
                   <td className="p-4 text-[15px] text-gray-800 font-medium">
                     {complaint.complaint_id || complaint.id}
                   </td>
