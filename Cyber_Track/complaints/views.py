@@ -46,6 +46,10 @@ class FinancialComplaintCreateView(
 ):  # To Create Financial Fraud Complaint
     queryset = FinancialFraudComplaint.objects.all()
     serializer_class = FinancialFraudComplaintSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class SocialMediaHackComplaintCreateView(
@@ -53,6 +57,10 @@ class SocialMediaHackComplaintCreateView(
 ):  # To Create Social Media Hack Complaint
     queryset = SocialMediaHackComplaint.objects.all()
     serializer_class = SocialMediaHackComplaintSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class DefamationComplaintCreateView(
@@ -60,11 +68,19 @@ class DefamationComplaintCreateView(
 ):  # To Create Defamation Complaint
     queryset = DefamationComplaint.objects.all()
     serializer_class = DefamationComplaintSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class OtherComplaintCreateView(generics.CreateAPIView):  # To Create Other Complaint
     queryset = OtherComplaint.objects.all()
     serializer_class = OtherComplaintSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 # Fetching complaints
@@ -72,13 +88,24 @@ class OtherComplaintCreateView(generics.CreateAPIView):  # To Create Other Compl
 
 class ListAllComplaintsView(generics.ListAPIView):  # To List All Complaints
 
-    # permission_classes = [IsAuthenticated, IsOfficerOrAdmin]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         financial_fraud_complaints = FinancialFraudComplaint.objects.all()
         social_media_hack_complaints = SocialMediaHackComplaint.objects.all()
         defamation_complaints = DefamationComplaint.objects.all()
         other_complaints = OtherComplaint.objects.all()
+
+        # If user is staff/admin, show all complaints. Otherwise, show only their own
+        if not (self.request.user.is_staff or self.request.user.is_superuser):
+            financial_fraud_complaints = financial_fraud_complaints.filter(
+                user=self.request.user
+            )
+            social_media_hack_complaints = social_media_hack_complaints.filter(
+                user=self.request.user
+            )
+            defamation_complaints = defamation_complaints.filter(user=self.request.user)
+            other_complaints = other_complaints.filter(user=self.request.user)
 
         combined_queryset = list(
             chain(
@@ -180,7 +207,7 @@ class ListAllComplaintsView(generics.ListAPIView):  # To List All Complaints
 
 class AllComplaintUpdateView(generics.GenericAPIView):
 
-    # permission_classes = [IsAuthenticated, IsOfficerOrAdmin]
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self, complaint_type):
         if complaint_type == "financial_fraud":
@@ -230,6 +257,13 @@ class AllComplaintUpdateView(generics.GenericAPIView):
         return Response(serializer.data)
 
     def put(self, request, complaint_type, complaint_id, *args, **kwargs):
+        # Only staff/superuser can update complaints
+        if not (request.user.is_staff or request.user.is_superuser):
+            return Response(
+                {"error": "Only staff or admin users can update complaints"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         queryset = self.get_queryset(complaint_type)
         if not queryset:
             return Response(
@@ -352,3 +386,54 @@ class SendEmailView(generics.GenericAPIView):
         return Response(
             {"message": "Email sent successfully"}, status=status.HTTP_200_OK
         )
+
+
+class ComplaintDeleteView(generics.GenericAPIView):
+    """View to delete a complaint - only staff/superuser can delete"""
+
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self, complaint_type):
+        if complaint_type == "financial":
+            return FinancialFraudComplaint.objects.all()
+        elif complaint_type == "social":
+            return SocialMediaHackComplaint.objects.all()
+        elif complaint_type == "defamation":
+            return DefamationComplaint.objects.all()
+        elif complaint_type == "others":
+            return OtherComplaint.objects.all()
+        else:
+            return None
+
+    def delete(self, request, complaint_type, complaint_id, *args, **kwargs):
+        # Only staff/superuser can delete complaints
+        if not (request.user.is_staff or request.user.is_superuser):
+            return Response(
+                {"error": "Only staff or admin users can delete complaints"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        queryset = self.get_queryset(complaint_type)
+        if not queryset:
+            return Response(
+                {"error": "Invalid complaint type"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            complaint = queryset.get(complaint_id=complaint_id)
+            complaint_info = {
+                "complaint_id": complaint.complaint_id,
+                "victim_Name": complaint.victim_Name,
+            }
+            complaint.delete()
+            return Response(
+                {
+                    "message": "Complaint deleted successfully",
+                    "deleted_complaint": complaint_info,
+                },
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        except queryset.model.DoesNotExist:
+            return Response(
+                {"error": "Complaint not found"}, status=status.HTTP_404_NOT_FOUND
+            )
