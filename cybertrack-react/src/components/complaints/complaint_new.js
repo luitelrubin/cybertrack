@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Defamation from "./defamation";
 import Financial from "./financial";
 import Social from "./social";
@@ -7,6 +8,7 @@ import jsPDF from "jspdf";
 import axios from "axios";
 
 export default function Complaint() {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [formData, setFormData] = useState({
     complaint_id: "",
@@ -36,21 +38,16 @@ export default function Complaint() {
   const [othersData, setOthersData] = useState(null);
 
   const handleDefamationSubmit = async (defamationData) => {
-    // Combine the initial form data and the defamation-specific data
     const combinedData = {
       ...formData,
       ...defamationData,
+      status: "Pending",
     };
 
     console.log("Combined Data:", combinedData);
 
-    setShowDownloadButton(true);
-
     try {
-      // Create FormData to handle file uploads
       const formDataToSend = new FormData();
-
-      // Required fields that should always be included
       const requiredFields = [
         "description",
         "medium",
@@ -58,38 +55,35 @@ export default function Complaint() {
         "contact_email",
       ];
 
-      // Add all fields to FormData
       for (const key in combinedData) {
         const value = combinedData[key];
 
-        // Include if: not null/undefined, OR it's a required field
         if (
           (value !== null && value !== undefined && value !== "") ||
           requiredFields.includes(key)
         ) {
-          // Convert ward_no to integer
           if (key === "ward_no" && value) {
             formDataToSend.append(key, parseInt(value, 10));
           } else if (value instanceof File) {
-            // Only append actual File objects
             formDataToSend.append(key, value);
           } else if (value !== null && value !== undefined) {
-            // Append the value (including empty string for validation)
             formDataToSend.append(key, value);
           }
         }
       }
 
-      // Send POST request to the backend API
       const response = await axios.post(
         "http://localhost:8000/complaints/create-defamation/",
         formDataToSend
       );
 
       if (response.status === 201) {
-        // Handle successful response
         console.log("Complaint submitted successfully");
-        alert("Defamation complaint submitted successfully!");
+        handleDownload("defamation_complaint.pdf");
+        alert("Defamation complaint submitted successfully! Redirecting to dashboard...");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
       }
     } catch (error) {
       console.error("Full error:", error);
@@ -97,22 +91,18 @@ export default function Complaint() {
       alert("Error: " + JSON.stringify(error.response?.data || error.message));
     }
   };
+
   const handleFinancialSubmit = async (financialData) => {
-    // Combine the initial form data and the financial-specific data
     const combinedData = {
       ...formData,
       ...financialData,
+      status: "Pending",
     };
 
     console.log("Combined Data:", combinedData);
 
-    setShowDownloadButton(true);
-
     try {
-      // Create FormData to handle file uploads
       const formDataToSend = new FormData();
-
-      // Required fields that should always be included
       const requiredFields = [
         "description",
         "medium",
@@ -120,38 +110,38 @@ export default function Complaint() {
         "contact_email",
       ];
 
-      // Add all fields to FormData
       for (const key in combinedData) {
         const value = combinedData[key];
 
-        // Include if: not null/undefined, OR it's a required field
         if (
           (value !== null && value !== undefined && value !== "") ||
           requiredFields.includes(key)
         ) {
-          // Convert ward_no to integer
           if (key === "ward_no" && value) {
             formDataToSend.append(key, parseInt(value, 10));
           } else if (value instanceof File) {
-            // Only append actual File objects
             formDataToSend.append(key, value);
           } else if (value !== null && value !== undefined) {
-            // Append the value (including empty string for validation)
             formDataToSend.append(key, value);
           }
         }
       }
 
-      // Send POST request to the backend API
       const response = await axios.post(
         "http://localhost:8000/complaints/create-financial-fraud/",
         formDataToSend
       );
 
       if (response.status === 201) {
-        // Handle successful response
         console.log("Complaint submitted successfully");
-        alert("Financial fraud complaint submitted successfully!");
+        console.log("Starting download...");
+        handleDownload("financial_complaint.pdf");
+        alert("Financial fraud complaint submitted successfully! Redirecting to dashboard...");
+        console.log("Download started, redirecting in 1 second...");
+        setTimeout(() => {
+          console.log("Navigating to dashboard");
+          navigate("/dashboard");
+        }, 1000);
       }
     } catch (error) {
       console.error("Full error:", error);
@@ -159,22 +149,18 @@ export default function Complaint() {
       alert("Error: " + JSON.stringify(error.response?.data || error.message));
     }
   };
+
   const handleSocialSubmit = async (socialData) => {
-    // Combine the initial form data and the social-specific data
     const combinedData = {
       ...formData,
       ...socialData,
+      status: "Pending",
     };
 
     console.log("Combined Data:", combinedData);
 
-    setShowDownloadButton(true);
-
     try {
-      // Create FormData to handle file uploads
       const formDataToSend = new FormData();
-
-      // Required fields that should always be included
       const requiredFields = [
         "description",
         "medium",
@@ -182,38 +168,35 @@ export default function Complaint() {
         "contact_email",
       ];
 
-      // Add all fields to FormData
       for (const key in combinedData) {
         const value = combinedData[key];
 
-        // Include if: not null/undefined, OR it's a required field
         if (
           (value !== null && value !== undefined && value !== "") ||
           requiredFields.includes(key)
         ) {
-          // Convert ward_no to integer
           if (key === "ward_no" && value) {
             formDataToSend.append(key, parseInt(value, 10));
           } else if (value instanceof File) {
-            // Only append actual File objects
             formDataToSend.append(key, value);
           } else if (value !== null && value !== undefined) {
-            // Append the value (including empty string for validation)
             formDataToSend.append(key, value);
           }
         }
       }
 
-      // Send POST request to the backend API
       const response = await axios.post(
         "http://localhost:8000/complaints/create-social-media-hack/",
         formDataToSend
       );
 
       if (response.status === 201) {
-        // Handle successful response
         console.log("Complaint submitted successfully");
-        alert("Social media hack complaint submitted successfully!");
+        handleDownload("social_complaint.pdf");
+        alert("Social media hack complaint submitted successfully! Redirecting to dashboard...");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
       }
     } catch (error) {
       console.error("Full error:", error);
@@ -221,22 +204,18 @@ export default function Complaint() {
       alert("Error: " + JSON.stringify(error.response?.data || error.message));
     }
   };
+
   const handleOthersSubmit = async (othersData) => {
-    // Combine the initial form data and the others-specific data
     const combinedData = {
       ...formData,
       ...othersData,
+      status: "Pending",
     };
 
     console.log("Combined Data:", combinedData);
 
-    setShowDownloadButton(true);
-
     try {
-      // Create FormData to handle file uploads
       const formDataToSend = new FormData();
-
-      // Required fields that should always be included
       const requiredFields = [
         "description",
         "medium",
@@ -244,38 +223,35 @@ export default function Complaint() {
         "contact_email",
       ];
 
-      // Add all fields to FormData
       for (const key in combinedData) {
         const value = combinedData[key];
 
-        // Include if: not null/undefined, OR it's a required field
         if (
           (value !== null && value !== undefined && value !== "") ||
           requiredFields.includes(key)
         ) {
-          // Convert ward_no to integer
           if (key === "ward_no" && value) {
             formDataToSend.append(key, parseInt(value, 10));
           } else if (value instanceof File) {
-            // Only append actual File objects
             formDataToSend.append(key, value);
           } else if (value !== null && value !== undefined) {
-            // Append the value (including empty string for validation)
             formDataToSend.append(key, value);
           }
         }
       }
 
-      // Send POST request to the backend API
       const response = await axios.post(
         "http://localhost:8000/complaints/create-other/",
         formDataToSend
       );
 
       if (response.status === 201) {
-        // Handle successful response
         console.log("Complaint submitted successfully");
-        alert("Other crime complaint submitted successfully!");
+        handleDownload("other_crime_complaint.pdf");
+        alert("Other crime complaint submitted successfully! Redirecting to dashboard...");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
       }
     } catch (error) {
       console.error("Full error:", error);
@@ -283,6 +259,7 @@ export default function Complaint() {
       alert("Error: " + JSON.stringify(error.response?.data || error.message));
     }
   };
+
   const onComplaintTypeChange = (event) => {
     setComplaintType(event.target.value);
   };
@@ -306,7 +283,7 @@ export default function Complaint() {
       ["Terhathum", "Terhathum"],
       ["Udayapur", "Udayapur"],
     ],
-    "Province 2": [
+    "Madhesh Province": [
       ["Bara", "Bara"],
       ["Dhanusa", "Dhanusa"],
       ["Mahottari", "Mahottari"],
@@ -388,14 +365,11 @@ export default function Complaint() {
     setFormData({
       ...formData,
       province: selectedProvince,
-      district: "", // Reset district on province change
+      district: "",
     });
 
-    // Update districts based on selected province
     setDistricts(DISTRICT_CHOICES[selectedProvince] || []);
   };
-
-  const [showDownloadButton, setShowDownloadButton] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -404,6 +378,7 @@ export default function Complaint() {
       [name]: value,
     });
   };
+
   const handleFileChange = (e, fieldName) => {
     setFormData({
       ...formData,
@@ -420,14 +395,14 @@ export default function Complaint() {
       ...formData,
       complaint_id: randomComplaintId,
     });
-    // Don't need to set page anymore - form will show based on complaintType
   };
-  const handleDownload = () => {
+
+  const handleDownload = (filename = "complaint.pdf") => {
     const doc = new jsPDF();
     const date = new Date().toLocaleDateString();
 
     doc.setFontSize(12);
-    doc.text(date, 150, 10); // Date at the top right
+    doc.text(date, 150, 10);
 
     doc.text(10, 20, "Respected Investigator,");
     doc.text(
@@ -439,7 +414,7 @@ export default function Complaint() {
     const introText = `In the above regard, I have submitted a written request to the petitioner/applicant to take action as per the law as the following cyber crime incident has occurred.\n\nThe following is the information about the incident:\n\n1.Original ID/URL: ${formData.evidence_links}\n2.Medium of Crime: ${formData.medium}\n3.Unique Id Number: ${formData.unique_id_number}\n4.Summary of the crime: ${formData.description}\n\nI know that the above statement is true and correct. If it is found to be false, I will be held accountable according to the law.\n\nDetails of the applicant:\nName: ${formData.victim_Name}\nDate of Birth: ${formData.date_of_birth}\nAddress: ${formData.city}\nContact No: ${formData.contact_no}\nContact Email: ${formData.contact_email}\nGuardian No: ${formData.guardian_no}`;
     const introLines = doc.splitTextToSize(introText, 180);
     doc.text(10, 40, introLines);
-    doc.save("complaint.pdf");
+    doc.save(filename);
   };
 
   return (
@@ -798,7 +773,7 @@ export default function Complaint() {
             {/* Show complaint type specific form below */}
             {complaintType && (
               <div className="mt-12 pt-8 border-t-4 border-blue-200">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
                   {complaintType === "defamation" && "Defamation Details"}
                   {complaintType === "financial" && "Financial Fraud Details"}
                   {complaintType === "social" && "Social Media Hack Details"}
@@ -820,17 +795,6 @@ export default function Complaint() {
             )}
           </div>
         </div>
-
-        {showDownloadButton && (
-          <div className="mt-6 flex justify-center">
-            <button
-              onClick={handleDownload}
-              className="px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md"
-            >
-              Download PDF
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

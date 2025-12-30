@@ -64,13 +64,10 @@ export default function Others({ onSubmit }) {
   };
 
   return (
-    <div className="w-full max-w-2xl">
-      <form onSubmit={handleSubmit} className="space-y-8">
+    <div className="w-full">
+      <form onSubmit={handleSubmit} className="space-y-8 w-full">
         {/* Section: Crime Information */}
         <div className="bg-white border-2 border-gray-100 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-6 pb-4 border-b-2 border-blue-500">
-            Crime Information
-          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="relative flex flex-col md:col-span-2">
               <label className="text-sm font-medium text-gray-700 mb-2">
@@ -171,7 +168,7 @@ export default function Others({ onSubmit }) {
         </div>
 
         {/* Submit Section */}
-        <div className="flex gap-4 justify-center pt-4">
+        <div className="flex gap-4 justify-center pt-8 pb-4">
           <button
             type="submit"
             className="px-8 py-3 bg-blue-500 text-white font-medium rounded hover:bg-blue-600 transition-colors"

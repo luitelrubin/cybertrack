@@ -1,16 +1,15 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from "../context/AuthContext";
 
 export default function LoginPage() {
   const { auth, login, logout } = useContext(AuthContext);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -34,8 +33,8 @@ export default function LoginPage() {
 
       // Handle successful response (you can store JWT or session if needed)
       if (response.status === 200) {
-        const { access, refresh } = response.data; // Assuming the backend returns access and refresh tokens
-        login(access); // Store the access token in context
+        const { access, refresh, user } = response.data; // Assuming the backend returns access and refresh tokens and user info
+        login(access, user); // Store the access token and user info in context
         navigate("/home"); // Redirect to home page
       }
     } catch (err) {
@@ -53,10 +52,10 @@ export default function LoginPage() {
           alt="Nepal Police"
           className="max-w-full object-contain p-4"
           style={{
-            width: '236px',
-            height: '286px',
-            maxHeight: '80vh',
-            borderRadius: '8px',
+            width: "236px",
+            height: "286px",
+            maxHeight: "80vh",
+            borderRadius: "8px",
           }}
         />
       </div>
@@ -71,8 +70,11 @@ export default function LoginPage() {
             />
             <h1 className="text-2xl font-bold text-gray-800 mt-4">Sign In</h1>
             <p className="text-gray-600 mt-2">
-              Don't have an account?{' '}
-              <a href="/signup" className="text-blue-600 font-semibold hover:underline">
+              Don't have an account?{" "}
+              <a
+                href="/signup"
+                className="text-blue-600 font-semibold hover:underline"
+              >
                 Register here
               </a>
             </p>
@@ -80,7 +82,10 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="mt-6">
             <div className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-800">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-800"
+              >
                 Email
               </label>
               <input
@@ -94,7 +99,10 @@ export default function LoginPage() {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-800">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-800"
+              >
                 Password
               </label>
               <input
@@ -116,11 +124,17 @@ export default function LoginPage() {
                   id="remember-me"
                   className="h-4 w-4 text-blue-600 border-gray-300 rounded"
                 />
-                <label htmlFor="remember-me" className="ml-2 text-sm text-gray-800">
+                <label
+                  htmlFor="remember-me"
+                  className="ml-2 text-sm text-gray-800"
+                >
                   Remember me
                 </label>
               </div>
-              <a href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+              <a
+                href="/forgot-password"
+                className="text-sm text-blue-600 hover:underline"
+              >
                 Forgot Password?
               </a>
             </div>

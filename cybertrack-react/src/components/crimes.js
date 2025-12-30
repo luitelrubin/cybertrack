@@ -2,32 +2,32 @@ import React from "react";
 
 export default function Crime() {
   return (
-    <div className="relative flex flex-col items-center w-[90vw] h-[90vh] mx-auto">
-      <div className="w-full h-full flex justify-center items-center overflow-hidden rounded-[2vh] shadow-lg">
+    <div className="relative w-[105vw] h-screen flex flex-col items-center m-0 p-0 -ml-[2.5vw]">
+      <div className="w-full h-full flex justify-center items-center overflow-hidden m-0 p-0">
         <img
-          src="images/photo.png"
+          src="/images/Hero.png"
           alt="slider"
           id="photo1"
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-contain"
         />
       </div>
 
-      <div className="flex justify-between relative top-[-10vh] mt-[2vh] w-full">
+      <div className="flex justify-between absolute top-1/2 transform -translate-y-1/2 w-full px-6 z-10">
         <button
           id="prev-btn"
-          className="px-[1vw] py-[1vh] bg-gray-500 text-white rounded-md text-[1vw] hover:bg-blue-600"
+          className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-blue-600"
         >
           &lt;
         </button>
         <button
           id="next-btn"
-          className="px-[1vw] py-[1vh] bg-gray-500 text-white rounded-md text-[1vw] hover:bg-blue-600"
+          className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-blue-600"
         >
           &gt;
         </button>
       </div>
 
-      <div className="absolute bottom-[0vh] w-full flex justify-between px-[4vw]">
+      <div className="absolute bottom-10 w-full flex justify-between px-8 z-10">
         {/* Button 1 */}
         <button className="border-[0.3vw] border-[var(--border-color)] rounded-[2vh] text-[2vw] font-semibold py-[2vh] px-[6vw] mt-[12vh] mx-auto cursor-pointer transform translate-y-[1vh] hover:translate-y-[-1vh] transition-all duration-300 bg-[var(--background)] text-[var(--text-highlights)] hover:bg-[var(--text-highlights)] hover:text-[var(--background)]">
           Button 1

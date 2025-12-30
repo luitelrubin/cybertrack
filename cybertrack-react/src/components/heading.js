@@ -83,11 +83,29 @@ export default function Heading() {
 
         <div className="flex items-center max-lg:ml-auto space-x-4">
           {auth.isAuthenticated ? (
-            <Link to="/dashboard">
-              <button className="px-3.5 py-[7px] text-[15px] rounded font-semibold text-[#007bff] border border-[#007bff] hover:bg-[#007bff] transition-all ease-in-out duration-300 bg-transparent hover:text-white">
-                Dashboard
+            <>
+              <div className="flex items-center gap-2 px-3">
+                <span className="text-sm font-semibold text-gray-700">
+                  {auth.user?.first_name && auth.user?.last_name
+                    ? `${auth.user.first_name} ${auth.user.last_name}`
+                    : auth.user?.email || auth.user?.username}
+                </span>
+              </div>
+              <Link to="/dashboard">
+                <button className="px-3.5 py-[7px] text-[15px] rounded font-semibold text-[#007bff] border border-[#007bff] hover:bg-[#007bff] transition-all ease-in-out duration-300 bg-transparent hover:text-white">
+                  Dashboard
+                </button>
+              </Link>
+              <button
+                onClick={() => {
+                  logout();
+                  window.location.href = "/login";
+                }}
+                className="px-3.5 py-[7px] text-[15px] rounded font-semibold text-red-500 border border-red-500 hover:bg-red-500 transition-all ease-in-out duration-300 bg-transparent hover:text-white"
+              >
+                Logout
               </button>
-            </Link>
+            </>
           ) : (
             <Link to="/signup">
               <button className="px-3.5 py-[7px] text-[15px] rounded font-semibold text-[#007bff] border border-[#007bff] hover:bg-[#007bff] transition-all ease-in-out duration-300 bg-transparent hover:text-white">

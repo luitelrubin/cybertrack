@@ -3,7 +3,7 @@ import DashboardComplaint from "./dashboard_complaint";
 import { AuthContext } from "../context/AuthContext";
 
 export default function Dashboard() {
-  const { auth, logout } = useContext(AuthContext);
+  const { auth } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("defamation"); // Tracks the active tab for styling
   const [activeButton, setActiveButton] = useState("all"); // Tracks the active button for styling
 
@@ -147,16 +147,6 @@ export default function Dashboard() {
                 {activeTab === "others" && (
                   <DashboardComplaint data1={activeTab} data2={activeButton} />
                 )}
-              </div>
-
-              {/* Logout Button - Above Footer */}
-              <div className="bg-gray-50 border-t border-gray-200 p-6 flex justify-end">
-                <button
-                  onClick={logout}
-                  className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ease-in-out transform hover:scale-105"
-                >
-                  Logout
-                </button>
               </div>
             </div>
           </div>
