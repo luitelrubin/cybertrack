@@ -6,7 +6,7 @@ export default function footing() {
           <div className="lg:col-span-2">
             <a href="">
               <img
-                src="/images/cybertrack.png"
+                src="/images/cybertrackwhite.png"
                 alt="logo"
                 className="w-44 mb-8"
               />

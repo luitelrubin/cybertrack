@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import DashboardComplaint from "./dashboard_complaint";
-import Footing from "./footing";
 import { AuthContext } from "../context/AuthContext";
 
 export default function Dashboard() {
@@ -161,9 +160,6 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-
-          {/* Footer */}
-          <Footing />
         </>
       ) : (
         <h1>Not Authenticated</h1>

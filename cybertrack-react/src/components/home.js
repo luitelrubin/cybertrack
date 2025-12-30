@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div>
       <Crime />
-      {/* <Highlights /> */}
+      <Highlights />
     </div>
   );
 }
