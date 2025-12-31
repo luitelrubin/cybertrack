@@ -153,6 +153,13 @@ export default function DashboardComplaint({ data1, data2 }) {
       );
       console.log("Status updated:", response.data);
       setIsEditModalOpen(false);
+      setNotification({
+        type: "success",
+        message: "Status updated successfully!",
+      });
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
       fetchComplaints(data1, data2);
     } catch (err) {
       console.error("Error updating status:", err);

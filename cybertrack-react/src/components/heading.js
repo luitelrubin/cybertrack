@@ -86,13 +86,13 @@ export default function Heading() {
             <>
               <div className="flex items-center gap-2 px-3">
                 <span className="text-sm font-semibold text-gray-700">
-                  {auth.user?.first_name && auth.user?.last_name
-                    ? `${auth.user.first_name} ${auth.user.last_name}`
+                  {auth.user?.name
+                    ? auth.user.name
                     : auth.user?.email || auth.user?.username}
                 </span>
               </div>
               <Link to="/dashboard">
-                <button className="px-3.5 py-[7px] text-[15px] rounded font-semibold text-[#007bff] border border-[#007bff] hover:bg-[#007bff] transition-all ease-in-out duration-300 bg-transparent hover:text-white">
+                <button className="px-3.5 py-[7px] text-[15px] rounded font-semibold text-white border border-blue-600 hover:bg-blue-700 transition-all ease-in-out duration-300 bg-blue-600 hover:text-white">
                   Dashboard
                 </button>
               </Link>
@@ -108,7 +108,7 @@ export default function Heading() {
             </>
           ) : (
             <Link to="/signup">
-              <button className="px-3.5 py-[7px] text-[15px] rounded font-semibold text-[#007bff] border border-[#007bff] hover:bg-[#007bff] transition-all ease-in-out duration-300 bg-transparent hover:text-white">
+              <button className="px-3.5 py-[7px] text-[15px] rounded font-semibold text-white border border-blue-600 hover:bg-blue-700 transition-all ease-in-out duration-300 bg-blue-600 hover:text-white">
                 Sign up
               </button>
             </Link>

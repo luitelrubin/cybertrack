@@ -47,6 +47,13 @@ class LoginView(generics.GenericAPIView):
                 {
                     "refresh": str(refresh),
                     "access": str(refresh.access_token),
+                    "user": {
+                        "official_id": user.official_id,
+                        "email": user.email,
+                        "name": user.name,
+                        "is_staff": user.is_staff,
+                        "is_superuser": user.is_superuser,
+                    },
                 }
             )
         return Response({"error": "Invalid Credentials"}, status=400)

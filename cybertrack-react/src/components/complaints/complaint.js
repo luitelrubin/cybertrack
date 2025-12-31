@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Defamation from "./defamation";
 import Financial from "./financial";
 import Social from "./social";
 import Others from "./others";
 import jsPDF from "jspdf";
 import axios from "axios";
+import { AuthContext } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Complaint() {
+  const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [formData, setFormData] = useState({
     complaint_id: "",
@@ -306,7 +310,7 @@ export default function Complaint() {
       ["Terhathum", "Terhathum"],
       ["Udayapur", "Udayapur"],
     ],
-    "Province 2": [
+    "Madhesh Province": [
       ["Bara", "Bara"],
       ["Dhanusa", "Dhanusa"],
       ["Mahottari", "Mahottari"],
@@ -445,391 +449,443 @@ export default function Complaint() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-8">
       <div className="container mx-auto max-w-5xl">
-        {/* Main Card */}
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-6">
-            <h1 className="text-3xl font-bold text-white">
-              File a Cybercrime Complaint
-            </h1>
-            <p className="text-blue-100 mt-2">
-              Select the type of complaint and provide detailed information
-            </p>
-          </div>
-
-          {/* Form Container */}
-          <div className="p-8">
-            <form onSubmit={handleNext} className="space-y-6">
-              {/* Complaint Type Selection - Spanning Full Width */}
-              <div className="mb-8">
-                <label className="block text-lg font-semibold text-gray-700 mb-4">
-                  Complaint Type <span className="text-red-500">*</span>
-                </label>
-                <select
-                  onChange={onComplaintTypeChange}
-                  defaultValue=""
-                  className="w-full px-6 py-4 text-base font-medium bg-gradient-to-r from-blue-50 to-blue-100 text-gray-800 border-2 border-blue-400 focus:border-blue-600 rounded-lg outline-none transition-all cursor-pointer hover:from-blue-100 hover:to-blue-200"
+        {/* Check if user is authenticated */}
+        {!auth.isAuthenticated ? (
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-6">
+              <h1 className="text-3xl font-bold text-white">
+                File a Cybercrime Complaint
+              </h1>
+            </div>
+            <div className="p-12 text-center">
+              <div className="inline-block bg-blue-50 border-2 border-blue-300 rounded-lg p-8 max-w-md">
+                <svg
+                  className="w-16 h-16 text-blue-600 mx-auto mb-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <option value="">-- Select Complaint Type --</option>
-                  <option value="defamation">Defamation</option>
-                  <option value="financial">Financial Fraud</option>
-                  <option value="social">Social Media Hack</option>
-                  <option value="others">Other Crime</option>
-                </select>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+                <h2 className="text-2xl font-bold text-gray-800 mb-3">
+                  Authentication Required
+                </h2>
+                <p className="text-gray-700 mb-6 text-lg">
+                  Please log in to file a complaint
+                </p>
+                <button
+                  onClick={() => navigate("/login")}
+                  className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md"
+                >
+                  Go to Login
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Main Card */}
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+              {/* Header */}
+              <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-6">
+                <h1 className="text-3xl font-bold text-white">
+                  File a Cybercrime Complaint
+                </h1>
+                <p className="text-blue-100 mt-2">
+                  Select the type of complaint and provide detailed information
+                </p>
               </div>
 
-              {/* Only show form if complaint type is selected */}
-              {complaintType && (
-                <>
-                  {/* Personal Information Section */}
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-blue-500">
-                      Personal Information
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Victim Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
-                          name="victim_Name"
-                          value={formData.victim_Name}
-                          onChange={handleChange}
-                          required
-                          placeholder="Enter full name"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Date of Birth
-                        </label>
-                        <input
-                          type="date"
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
-                          name="date_of_birth"
-                          value={formData.date_of_birth}
-                          onChange={handleChange}
-                        />
-                      </div>
-                    </div>
+              {/* Form Container */}
+              <div className="p-8">
+                <form onSubmit={handleNext} className="space-y-6">
+                  {/* Complaint Type Selection - Spanning Full Width */}
+                  <div className="mb-8">
+                    <label className="block text-lg font-semibold text-gray-700 mb-4">
+                      Complaint Type <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      onChange={onComplaintTypeChange}
+                      defaultValue=""
+                      className="w-full px-6 py-4 text-base font-medium bg-gradient-to-r from-blue-50 to-blue-100 text-gray-800 border-2 border-blue-400 focus:border-blue-600 rounded-lg outline-none transition-all cursor-pointer hover:from-blue-100 hover:to-blue-200"
+                    >
+                      <option value="">-- Select Complaint Type --</option>
+                      <option value="defamation">Defamation</option>
+                      <option value="financial">Financial Fraud</option>
+                      <option value="social">Social Media Hack</option>
+                      <option value="others">Other Crime</option>
+                    </select>
                   </div>
 
-                  {/* Address Information Section */}
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-blue-500">
-                      Address Information
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Country <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
-                          name="country"
-                          value={formData.country}
-                          onChange={handleChange}
-                          required
-                        >
-                          <option value="">Select Country</option>
-                          <option value="Nepal">Nepal</option>
-                        </select>
+                  {/* Only show form if complaint type is selected */}
+                  {complaintType && (
+                    <>
+                      {/* Personal Information Section */}
+                      <div>
+                        <h2 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-blue-500">
+                          Personal Information
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Victim Name{" "}
+                              <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
+                              name="victim_Name"
+                              value={formData.victim_Name}
+                              onChange={handleChange}
+                              required
+                              placeholder="Enter full name"
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Date of Birth
+                            </label>
+                            <input
+                              type="date"
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
+                              name="date_of_birth"
+                              value={formData.date_of_birth}
+                              onChange={handleChange}
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Province <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
-                          name="province"
-                          value={formData.province}
-                          onChange={handleProvinceChange}
-                          required
-                        >
-                          <option value="">Select Province</option>
-                          <option value="Koshi Province">Koshi Province</option>
-                          <option value="Madhesh Province">
-                            Madhesh Province
-                          </option>
-                          <option value="Bagmati Province">
-                            Bagmati Province
-                          </option>
-                          <option value="Gandaki Province">
-                            Gandaki Province
-                          </option>
-                          <option value="Lumbini Province">
-                            Lumbini Province
-                          </option>
-                          <option value="Karnali Province">
-                            Karnali Province
-                          </option>
-                          <option value="Sudurpashchim Province">
-                            Sudurpashchim Province
-                          </option>
-                        </select>
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          District <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
-                          name="district"
-                          value={formData.district}
-                          onChange={handleChange}
-                          required
-                        >
-                          <option value="">Select District</option>
-                          {districts.map(([value, label]) => (
-                            <option key={value} value={value}>
-                              {label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          City <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
-                          name="city"
-                          value={formData.city}
-                          onChange={handleChange}
-                          required
-                          placeholder="Enter city name"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Ward No <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="number"
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
-                          name="ward_no"
-                          value={formData.ward_no}
-                          onChange={handleChange}
-                          required
-                          placeholder="Enter ward number"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Unique ID <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
-                          name="unique_id_number"
-                          value={formData.unique_id_number}
-                          onChange={handleChange}
-                          required
-                          placeholder="Citizenship / Passport / License"
-                        />
-                      </div>
-                    </div>
-                  </div>
 
-                  {/* Contact Information Section */}
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-blue-500">
-                      Contact Information
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Contact Number <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
-                          name="contact_no"
-                          value={formData.contact_no}
-                          onChange={handleChange}
-                          required
-                          placeholder="+977-9841234567"
-                        />
+                      {/* Address Information Section */}
+                      <div>
+                        <h2 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-blue-500">
+                          Address Information
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Country <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
+                              name="country"
+                              value={formData.country}
+                              onChange={handleChange}
+                              required
+                            >
+                              <option value="">Select Country</option>
+                              <option value="Nepal">Nepal</option>
+                            </select>
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Province <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
+                              name="province"
+                              value={formData.province}
+                              onChange={handleProvinceChange}
+                              required
+                            >
+                              <option value="">Select Province</option>
+                              <option value="Koshi Province">
+                                Koshi Province
+                              </option>
+                              <option value="Madhesh Province">
+                                Madhesh Province
+                              </option>
+                              <option value="Bagmati Province">
+                                Bagmati Province
+                              </option>
+                              <option value="Gandaki Province">
+                                Gandaki Province
+                              </option>
+                              <option value="Lumbini Province">
+                                Lumbini Province
+                              </option>
+                              <option value="Karnali Province">
+                                Karnali Province
+                              </option>
+                              <option value="Sudurpashchim Province">
+                                Sudurpashchim Province
+                              </option>
+                            </select>
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              District <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
+                              name="district"
+                              value={formData.district}
+                              onChange={handleChange}
+                              required
+                            >
+                              <option value="">Select District</option>
+                              {districts.map(([value, label]) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              City <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
+                              name="city"
+                              value={formData.city}
+                              onChange={handleChange}
+                              required
+                              placeholder="Enter city name"
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Ward No <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="number"
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
+                              name="ward_no"
+                              value={formData.ward_no}
+                              onChange={handleChange}
+                              required
+                              placeholder="Enter ward number"
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Unique ID <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
+                              name="unique_id_number"
+                              value={formData.unique_id_number}
+                              onChange={handleChange}
+                              required
+                              placeholder="Citizenship / Passport / License"
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Email Address <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="email"
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
-                          name="contact_email"
-                          value={formData.contact_email}
-                          onChange={handleChange}
-                          required
-                          placeholder="email@example.com"
-                        />
-                      </div>
-                      <div className="flex flex-col md:col-span-2">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Guardian Number (Optional)
-                        </label>
-                        <input
-                          type="text"
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
-                          name="guardian_no"
-                          value={formData.guardian_no}
-                          onChange={handleChange}
-                          placeholder="+977-1234567890"
-                        />
-                      </div>
-                    </div>
-                  </div>
 
-                  {/* Crime Information Section */}
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-blue-500">
-                      Crime Information
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="flex flex-col md:col-span-2">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Description <span className="text-red-500">*</span>
-                        </label>
-                        <textarea
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition resize-none"
-                          name="description"
-                          rows="5"
-                          value={formData.description}
-                          onChange={handleChange}
-                          required
-                          placeholder="Provide detailed description of the incident..."
-                        ></textarea>
+                      {/* Contact Information Section */}
+                      <div>
+                        <h2 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-blue-500">
+                          Contact Information
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Contact Number{" "}
+                              <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
+                              name="contact_no"
+                              value={formData.contact_no}
+                              onChange={handleChange}
+                              required
+                              placeholder="+977-9841234567"
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Email Address{" "}
+                              <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="email"
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
+                              name="contact_email"
+                              value={formData.contact_email}
+                              onChange={handleChange}
+                              required
+                              placeholder="email@example.com"
+                            />
+                          </div>
+                          <div className="flex flex-col md:col-span-2">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Guardian Number (Optional)
+                            </label>
+                            <input
+                              type="text"
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
+                              name="guardian_no"
+                              value={formData.guardian_no}
+                              onChange={handleChange}
+                              placeholder="+977-1234567890"
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Medium <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
-                          name="medium"
-                          value={formData.medium}
-                          onChange={handleChange}
-                          required
-                        >
-                          <option value="FB">Facebook</option>
-                          <option value="messenger">Messenger</option>
-                          <option value="whatsapp">Whatsapp</option>
-                          <option value="instagram">Instagram</option>
-                          <option value="twitter">Twitter</option>
-                          <option value="snapchat">Snapchat</option>
-                          <option value="linkedin">Linkedin</option>
-                          <option value="others">Others</option>
-                        </select>
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Evidence Links (Optional)
-                        </label>
-                        <input
-                          type="url"
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
-                          name="evidence_links"
-                          value={formData.evidence_links}
-                          onChange={handleChange}
-                          placeholder="https://example.com"
-                        />
-                      </div>
-                    </div>
-                  </div>
 
-                  {/* Document Upload Section */}
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-blue-500">
-                      Supporting Documents
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          ID Document
-                        </label>
-                        <input
-                          type="file"
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition cursor-pointer file:cursor-pointer"
-                          onChange={(e) =>
-                            handleFileChange(e, "unique_id_card")
-                          }
-                        />
+                      {/* Crime Information Section */}
+                      <div>
+                        <h2 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-blue-500">
+                          Crime Information
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="flex flex-col md:col-span-2">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Description{" "}
+                              <span className="text-red-500">*</span>
+                            </label>
+                            <textarea
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition resize-none"
+                              name="description"
+                              rows="5"
+                              value={formData.description}
+                              onChange={handleChange}
+                              required
+                              placeholder="Provide detailed description of the incident..."
+                            ></textarea>
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Medium <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
+                              name="medium"
+                              value={formData.medium}
+                              onChange={handleChange}
+                              required
+                            >
+                              <option value="FB">Facebook</option>
+                              <option value="messenger">Messenger</option>
+                              <option value="whatsapp">Whatsapp</option>
+                              <option value="instagram">Instagram</option>
+                              <option value="twitter">Twitter</option>
+                              <option value="snapchat">Snapchat</option>
+                              <option value="linkedin">Linkedin</option>
+                              <option value="others">Others</option>
+                            </select>
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Evidence Links (Optional)
+                            </label>
+                            <input
+                              type="url"
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition"
+                              name="evidence_links"
+                              value={formData.evidence_links}
+                              onChange={handleChange}
+                              placeholder="https://example.com"
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Signature
-                        </label>
-                        <input
-                          type="file"
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition cursor-pointer file:cursor-pointer"
-                          onChange={(e) => handleFileChange(e, "signature")}
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Screenshots
-                        </label>
-                        <input
-                          type="file"
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition cursor-pointer file:cursor-pointer"
-                          onChange={(e) => handleFileChange(e, "screenshots")}
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <label className="text-sm font-semibold text-gray-700 mb-2">
-                          Other Documents
-                        </label>
-                        <input
-                          type="file"
-                          className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition cursor-pointer file:cursor-pointer"
-                          onChange={(e) => handleFileChange(e, "other_doc")}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
-            </form>
 
-            {/* Show complaint type specific form below */}
-            {complaintType && (
-              <div className="mt-12 pt-8 border-t-4 border-blue-200">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                  {complaintType === "defamation" && "Defamation Details"}
-                  {complaintType === "financial" && "Financial Fraud Details"}
-                  {complaintType === "social" && "Social Media Hack Details"}
-                  {complaintType === "others" && "Other Crime Details"}
-                </h2>
-                {complaintType === "defamation" && (
-                  <Defamation onSubmit={handleDefamationSubmit} />
+                      {/* Document Upload Section */}
+                      <div>
+                        <h2 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-blue-500">
+                          Supporting Documents
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              ID Document
+                            </label>
+                            <input
+                              type="file"
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition cursor-pointer file:cursor-pointer"
+                              onChange={(e) =>
+                                handleFileChange(e, "unique_id_card")
+                              }
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Signature
+                            </label>
+                            <input
+                              type="file"
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition cursor-pointer file:cursor-pointer"
+                              onChange={(e) => handleFileChange(e, "signature")}
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Screenshots
+                            </label>
+                            <input
+                              type="file"
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition cursor-pointer file:cursor-pointer"
+                              onChange={(e) =>
+                                handleFileChange(e, "screenshots")
+                              }
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-700 mb-2">
+                              Other Documents
+                            </label>
+                            <input
+                              type="file"
+                              className="px-4 py-3 bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 rounded-lg outline-none transition cursor-pointer file:cursor-pointer"
+                              onChange={(e) => handleFileChange(e, "other_doc")}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </form>
+
+                {/* Show complaint type specific form below */}
+                {complaintType && (
+                  <div className="mt-12 pt-8 border-t-4 border-blue-200">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                      {complaintType === "defamation" && "Defamation Details"}
+                      {complaintType === "financial" &&
+                        "Financial Fraud Details"}
+                      {complaintType === "social" &&
+                        "Social Media Hack Details"}
+                      {complaintType === "others" && "Other Crime Details"}
+                    </h2>
+                    {complaintType === "defamation" && (
+                      <Defamation onSubmit={handleDefamationSubmit} />
+                    )}
+                    {complaintType === "financial" && (
+                      <Financial onSubmit={handleFinancialSubmit} />
+                    )}
+                    {complaintType === "social" && (
+                      <Social onSubmit={handleSocialSubmit} />
+                    )}
+                    {complaintType === "others" && (
+                      <Others onSubmit={handleOthersSubmit} />
+                    )}
+                  </div>
                 )}
-                {complaintType === "financial" && (
-                  <Financial onSubmit={handleFinancialSubmit} />
-                )}
-                {complaintType === "social" && (
-                  <Social onSubmit={handleSocialSubmit} />
-                )}
-                {complaintType === "others" && (
-                  <Others onSubmit={handleOthersSubmit} />
-                )}
+              </div>
+            </div>
+
+            {showDownloadButton && (
+              <div className="mt-6 flex justify-center">
+                <button
+                  onClick={handleDownload}
+                  className="px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md"
+                >
+                  Download PDF
+                </button>
               </div>
             )}
-          </div>
-        </div>
-
-        {showDownloadButton && (
-          <div className="mt-6 flex justify-center">
-            <button
-              onClick={handleDownload}
-              className="px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md"
-            >
-              Download PDF
-            </button>
-          </div>
+          </>
         )}
       </div>
     </div>

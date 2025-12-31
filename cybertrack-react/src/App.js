@@ -1,10 +1,10 @@
-import { Outlet } from 'react-router-dom';
-import Heading from './components/heading';
-import Footing from './components/footing';
-import './App.css';
+import { Outlet } from "react-router-dom";
+import Heading from "./components/heading";
+import Footing from "./components/footing";
+import "./components/style.css";
+import "./App.css";
 
 function App() {
-
   return (
     <div className="App">
       <Heading />
