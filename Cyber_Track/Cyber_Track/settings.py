@@ -128,11 +128,11 @@ WSGI_APPLICATION = "Cyber_Track.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "cyber_track",
-        "USER": "postgres",
-        "PASSWORD": "S3cret-Ninja",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": "enter_correct_info",
+        "USER": "enter_correct_info",
+        "PASSWORD": "enter_correct_info",
+        "HOST": "enter_correct_info",
+        "PORT": "enter_correct_info",
     }
 }
 
